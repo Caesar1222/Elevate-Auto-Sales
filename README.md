@@ -149,7 +149,7 @@ GitHub Pages. Point the dealership's domain at it.
       files from whoever designed the banner (`logo()` and `emblem()` in `js/brand.js`).
 - [ ] **Photos:** vehicle photos, plus a photo of the owner for the About page.
 - [ ] **Hero:** swap the stock placeholder photo for the dealership's own video or photo of the lot.
-- [ ] **About page:** owner name and story are placeholders.
+- [ ] **About page:** the story is placeholder text. The owner's name is set in `js/config.js` (`owner`).
 - [ ] **Claims to confirm with the owner:** "a price on every car," "history
       reports on request," financing wording, and response-time language.
 - [ ] **Consent text** on forms (phone/text/email contact) should be reviewed.

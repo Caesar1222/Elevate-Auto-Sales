@@ -1023,6 +1023,7 @@ button.thumb { cursor: pointer; }
 window.ELEVATE_CONFIG = {
   name: 'Elevate Auto Sales',
   legalName: 'Elevate Auto Sales LLC',
+  owner: 'Axel Munoz', // shown on the About page
   tagline: 'Drive higher, drive better.',
 
   phoneDisplay: '(773) 373-5448',
@@ -1501,10 +1502,10 @@ window.ELEVATE_CONFIG = {
 
       aboutTitle: 'About us',
       aboutLead: '{name} is a newly licensed independent dealership at {street} in {city}.',
-      aboutP2: 'Fill in with about info here.',
+      aboutP2: 'We’re a small team, so you’ll deal with the same people from your first call to the day you drive away. Every car on the lot is listed with its price, and we can help with financing and trade-ins.',
       aboutP3: 'Stop by {days}, or call us at {phone}.',
       ownerPhoto: 'Owner photo',
-      ownerName: 'Axel Muñoz',
+      ownerName: 'Owner name',
       ownerRole: 'Owner',
       callN: 'Call {phone}',
       openMaps: 'Open in Google Maps',
@@ -3163,7 +3164,7 @@ window.ELEVATE_CONFIG = {
         </div>
         <figure class="owner">
           ${Brand.photoPlaceholder({ label: esc(t('ownerPhoto')), size: 'portrait' })}
-          <figcaption><strong class="owner-name">${esc(t('ownerName'))}</strong><span class="owner-role">${esc(t('ownerRole'))}</span></figcaption>
+          <figcaption><strong class="owner-name">${esc(C.owner || t('ownerName'))}</strong><span class="owner-role">${esc(t('ownerRole'))}</span></figcaption>
         </figure>
       </div>
     </section>

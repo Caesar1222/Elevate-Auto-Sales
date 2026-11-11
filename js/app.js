@@ -1172,7 +1172,7 @@
         </div>
         <figure class="owner">
           ${Brand.photoPlaceholder({ label: esc(t('ownerPhoto')), size: 'portrait' })}
-          <figcaption><strong class="owner-name">${esc(t('ownerName'))}</strong><span class="owner-role">${esc(t('ownerRole'))}</span></figcaption>
+          <figcaption><strong class="owner-name">${esc(C.owner || t('ownerName'))}</strong><span class="owner-role">${esc(t('ownerRole'))}</span></figcaption>
         </figure>
       </div>
     </section>
