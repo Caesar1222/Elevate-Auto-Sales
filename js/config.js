@@ -4,6 +4,7 @@
 window.ELEVATE_CONFIG = {
   name: 'Elevate Auto Sales',
   legalName: 'Elevate Auto Sales LLC',
+  owner: 'Axel Munoz', // shown on the About page
   tagline: 'Drive higher, drive better.',
 
   phoneDisplay: '(773) 373-5448',
