@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Elevate Auto Sales | Used cars, trucks, and SUVs in Chicago</title>
-  <meta name="description" content="Pre-owned cars, trucks, and SUVs at 5247 W 47th St, Chicago, IL. Financing available and trade-ins welcome. Call (773) 373-5448.">
+  <meta name="description" content="Reliable used cars, trucks, and SUVs at affordable prices at 5247 W 47th St, Chicago, IL. Financing available. Open Monday–Saturday, 10 AM–6 PM. Call (773) 373-5448.">
   <meta name="theme-color" content="#0E0E0F">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -72,6 +72,7 @@
   --hero-bg: #262626;
   --hero-ph-ink: #8C8C8C;
   --on-hero-soft: #DCDCDC;
+  --on-hero-accent: #8FB1F7;
   --shade-strong: rgba(0, 0, 0, 0.72);
   --shade-mid: rgba(0, 0, 0, 0.42);
   --shade-soft: rgba(0, 0, 0, 0.08);
@@ -465,7 +466,16 @@ main:focus, h1[tabindex="-1"]:focus { outline: none; }
   color: var(--on-dark); text-wrap: balance;
 }
 .hero-text { max-width: 36rem; margin-top: 14px; font-size: 1.125rem; color: var(--on-hero-soft); }
-.hero-title, .hero-text { text-shadow: 0 1px 14px var(--shade-mid); }
+.hero-facts { display: grid; gap: 6px; margin-top: 18px; font-weight: 600; color: var(--on-dark); }
+.hero-facts li, .hero-facts a { display: flex; align-items: flex-start; gap: 10px; }
+.hero-facts a { color: inherit; text-decoration: none; border-radius: var(--r); }
+.hero-facts a:hover span { text-decoration: underline; text-underline-offset: 3px; }
+.hero-facts .icon { width: 1.25em; height: 1.25em; margin-top: 0.1em; color: var(--on-hero-accent); }
+.hero-tagline {
+  margin-top: 18px; font-family: var(--font-head); font-size: 1.0625rem; font-weight: 800; font-style: italic;
+  letter-spacing: 0.02em; color: var(--on-dark);
+}
+.hero-title, .hero-text, .hero-facts, .hero-tagline { text-shadow: 0 1px 14px var(--shade-mid); }
 .hero-actions { margin-top: 24px; }
 .hero-status { margin-top: 18px; font-weight: 600; color: var(--on-dark); }
 @media (min-width: 960px) { .hero-status { display: none; } }
@@ -541,6 +551,7 @@ main:focus, h1[tabindex="-1"]:focus { outline: none; }
 .two-up-item { display: grid; justify-items: start; align-content: start; gap: 12px; }
 .two-up-item p { max-width: 32rem; color: var(--ink-2); }
 .two-up-item .btn { margin-top: 6px; }
+.two-up-list { justify-self: stretch; max-width: 32rem; }
 @media (min-width: 800px) {
   .two-up { grid-template-columns: 1fr 1fr; gap: 0; }
   .two-up-item + .two-up-item { padding-left: 48px; margin-left: 48px; border-left: 1px solid var(--line-strong); }
@@ -665,14 +676,10 @@ main:focus, h1[tabindex="-1"]:focus { outline: none; }
 .form-stack .btn--lg { justify-self: start; }
 .form-error { color: var(--danger); font-weight: 600; font-size: 0.9375rem; }
 .fine { font-size: 0.8125rem; line-height: 1.45; color: var(--muted); }
+.hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 .check { display: flex; align-items: flex-start; gap: 10px; font-size: 0.9375rem; color: var(--ink-2); cursor: pointer; }
 .check input { width: 20px; height: 20px; margin: 2px 0 0; flex: none; accent-color: var(--accent); }
 .panel { padding: clamp(20px, 3vw, 32px); background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-card); }
-@media (min-width: 600px) { .field-row--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@media (max-width: 599px) {
-  .field-row--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .field-row--3 > :first-child { grid-column: 1 / -1; max-width: 10rem; }
-}
 
 /* Radio chips */
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -705,7 +712,6 @@ main:focus, h1[tabindex="-1"]:focus { outline: none; }
 
 /* Choice cards */
 .choice-grid { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr)); }
-.choice-grid--wide { grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); }
 .choice { position: relative; display: grid; }
 .choice input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
 .choice span {
@@ -864,7 +870,7 @@ button.thumb { cursor: pointer; }
 .calc-wrap { margin-top: 24px; }
 @media (min-width: 720px) { .calc { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: start; } }
 
-/* ---------- Financing and trade-in ---------- */
+/* ---------- Financing ---------- */
 .fin { display: grid; gap: 40px; padding-block: 32px 64px; }
 .fin-main { min-width: 0; }
 .stepper-progress { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 26px; }
@@ -881,11 +887,7 @@ button.thumb { cursor: pointer; }
 .fin-aside { display: grid; align-content: start; gap: 12px; }
 .aside-h { font-size: 1.3rem; }
 .aside-h:not(:first-child) { margin-top: 20px; }
-.aside-text { color: var(--ink-2); }
 .plain-list li { padding: 10px 0; border-bottom: 1px solid var(--line); color: var(--ink-2); }
-.numbered-list { list-style: decimal; padding-left: 1.4em; display: grid; gap: 10px; color: var(--ink-2); }
-.numbered-list li::marker { font-weight: 700; color: var(--ink); }
-.numbered-list strong { color: var(--ink); }
 .faq details { border-bottom: 1px solid var(--line); }
 .faq summary { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; font-weight: 700; cursor: pointer; list-style: none; }
 .faq summary::-webkit-details-marker { display: none; }
@@ -936,6 +938,7 @@ button.thumb { cursor: pointer; }
 .footer-h { margin-bottom: 8px; color: var(--on-dark); font-family: var(--font-head); font-size: 1rem; font-weight: 600; }
 .footer-list { display: grid; gap: 6px; }
 .footer-dim { opacity: 0.85; }
+.footer-email { overflow-wrap: anywhere; }
 .site-footer a { text-decoration: none; }
 .site-footer a:hover { color: var(--on-dark); text-decoration: underline; text-underline-offset: 3px; }
 .footer-link { display: inline-block; margin-top: 8px; color: var(--on-dark); font-weight: 600; text-decoration: underline !important; text-underline-offset: 3px; }
@@ -1024,11 +1027,11 @@ window.ELEVATE_CONFIG = {
   name: 'Elevate Auto Sales',
   legalName: 'Elevate Auto Sales LLC',
   owner: 'Axel Munoz', // shown on the About page
-  tagline: 'Drive higher, drive better.',
+  tagline: 'Drive Higher. Drive Better.', // as written on the banner
 
   phoneDisplay: '(773) 373-5448',
   phoneE164: '+17733735448',
-  email: 'elevatellc47@gmail.com',
+  email: 'elevatellc47@gmail.com', // shown on the site; form emails go here too (leadEndpoint)
 
   address: {
     street: '5247 W 47th St',
@@ -1069,10 +1072,15 @@ window.ELEVATE_CONFIG = {
     position: 'center',
   },
 
-  // Where form submissions (leads) are sent. null keeps the site in preview
-  // mode: forms show a confirmation but nothing leaves the browser.
-  // Later: a form service URL, or the CRM/inventory system's lead endpoint.
-  leadEndpoint: null,
+  // Where form submissions (leads) go. FormSubmit (formsubmit.co, free, no
+  // account) emails each one to the address at the end of this URL. The first
+  // submission from the live site sends an "Activate Form" email to that inbox;
+  // click it once (FormSubmit holds anything sent before then and delivers it
+  // after activation). Once activated, FormSubmit also sends a random string
+  // that can replace the address here, so the address isn't in the page code.
+  // Nothing sends from the chat preview, a file, or localhost (see README,
+  // "Form emails"). null turns sending off everywhere.
+  leadEndpoint: 'https://formsubmit.co/ajax/elevatellc47@gmail.com',
 };
 
 </script>
@@ -1273,7 +1281,6 @@ window.ELEVATE_CONFIG = {
       navMain: 'Main',
       navInventory: 'Inventory',
       navFinancing: 'Financing',
-      navTradein: 'Trade-in',
       navAbout: 'About',
       navContact: 'Contact',
       saved: 'Saved vehicles',
@@ -1302,7 +1309,8 @@ window.ELEVATE_CONFIG = {
       tomorrowDate: 'Tomorrow, {date}',
 
       heroTitle: 'Used cars, trucks, and SUVs on Chicago’s Southwest Side',
-      heroText: '{name} is a new independent dealer at {street}. Browse what’s on the lot, get pre-qualified for financing, or stop by {days}.',
+      heroText: 'Welcome to {name}! We’re a local used car dealership in Chicago offering reliable vehicles at affordable prices. We offer financing! Check out our inventory.',
+      heroHours: '{days} | {open}–{close}',
       browse: 'Browse inventory',
       prequal: 'Get pre-qualified',
       heroVideoPh: 'Hero video goes here',
@@ -1330,9 +1338,6 @@ window.ELEVATE_CONFIG = {
       onLot: 'On the lot now',
       financing: 'Financing',
       financingText: 'Fill out a short form and we’ll call you with options. You don’t need a Social Security number to get started.',
-      tradeins: 'Trade-ins',
-      tradeinsText: 'Tell us about the car you have now and we’ll make you an offer you can put toward your next one.',
-      startTradein: 'Start a trade-in',
 
       photoSoon: 'Photo coming soon',
       photosSoon: 'Photos coming soon',
@@ -1404,7 +1409,6 @@ window.ELEVATE_CONFIG = {
       estimate: 'Estimate a monthly payment',
       vehiclePrice: 'Vehicle price',
       downPayment: 'Down payment',
-      tradeValue: 'Trade-in value',
       apr: 'Interest rate (APR)',
       loanLength: 'Loan length in months',
       estPayment: 'Estimated payment',
@@ -1414,7 +1418,6 @@ window.ELEVATE_CONFIG = {
       calcFine: 'Estimate only, not an offer of credit. Your actual rate and terms depend on your credit and lender approval. Tax, title, license, and fees are not included.',
       priceAria: 'Vehicle price in dollars',
       downAria: 'Down payment in dollars',
-      tradeAria: 'Trade-in value in dollars',
       aprAria: 'Interest rate, percent',
       similar: 'Similar vehicles',
       choosePhoto: 'Choose a photo',
@@ -1441,9 +1444,6 @@ window.ELEVATE_CONFIG = {
       creditQ: 'How would you describe your credit?',
       notSure: 'Not sure yet',
       vehicleInterest: 'Vehicle you’re interested in',
-      hasTrade: 'Do you have a trade-in?',
-      yes: 'Yes',
-      no: 'No',
       anythingElse: 'Anything else we should know?',
       consentFin: 'I agree that {name} may contact me by phone, text, or email about financing.',
       stepBack: 'Back',
@@ -1461,8 +1461,6 @@ window.ELEVATE_CONFIG = {
       faq2a: 'This form doesn’t run a credit check. If you decide to move forward, a lender may check your credit with your permission.',
       faq3q: 'How much should I put down?',
       faq3a: 'It depends on the vehicle and your credit. A larger down payment lowers your monthly payment, and we can go over the numbers with you.',
-      faq4q: 'Can my trade-in count toward the down payment?',
-      faq4a: 'Yes. Your trade-in value can go toward your down payment.',
       calcLede: 'Change the numbers to see how price, down payment, and loan length affect your payment.',
       opt: {
         'Employed full-time': 'Employed full-time', 'Employed part-time': 'Employed part-time', 'Self-employed': 'Self-employed', Retired: 'Retired', Other: 'Other',
@@ -1470,39 +1468,12 @@ window.ELEVATE_CONFIG = {
         Excellent: 'Excellent', Good: 'Good', Fair: 'Fair', Rebuilding: 'Rebuilding', 'Not sure': 'Not sure',
         '720 and up': '720 and up', '660 to 719': '660 to 719', '600 to 659': '600 to 659', 'Below 600': 'Below 600', 'That’s fine': 'That’s fine',
         'Under $500': 'Under $500', '$500 to $1,500': '$500 to $1,500', '$1,500 to $3,000': '$1,500 to $3,000', 'Over $3,000': 'Over $3,000',
-        'Needs work': 'Needs work',
-        'No dents, scratches, or mechanical issues': 'No dents, scratches, or mechanical issues',
-        'Minor wear, and everything works': 'Minor wear, and everything works',
-        'Some dents or repairs needed': 'Some dents or repairs needed',
-        'Major repairs needed or it doesn’t run': 'Major repairs needed or it doesn’t run',
-        Call: 'Call', Text: 'Text', Email: 'Email', Yes: 'Yes', No: 'No',
+        Call: 'Call', Text: 'Text', Email: 'Email',
       },
-
-      tradeTitle: 'Trade-in',
-      tradeSub: 'Tell us about your vehicle and we’ll follow up with an offer you can put toward your next car.',
-      yourVehicle: 'Your vehicle',
-      trim: 'Trim',
-      color: 'Color',
-      vinOpt: 'VIN <span class="optional">(optional, speeds up your offer)</span>',
-      condition: 'Condition',
-      owes: 'Do you still owe money on it?',
-      yourContact: 'Your contact info',
-      requestOffer: 'Request an offer',
-      consentTrade: 'By sending, you agree that {name} may contact you about your trade-in by phone, text, or email.',
-      howItWorks: 'How it works',
-      how1: 'Send your details.',
-      how1s: 'The more you tell us, the more accurate the offer.',
-      how2: 'Bring the car by.',
-      how2s: 'We take a quick look in person.',
-      how3: 'Get your offer.',
-      how3s: 'Put it toward your next car from our lot.',
-      havePhotos: 'Have photos?',
-      havePhotosText: 'Text pictures of your car to {phone} and we’ll add them to your request.',
-      smsTradePhotos: 'Hi, here are photos of my trade-in.',
 
       aboutTitle: 'About us',
       aboutLead: '{name} is a newly licensed independent dealership at {street} in {city}.',
-      aboutP2: 'We’re a small team, so you’ll deal with the same people from your first call to the day you drive away. Every car on the lot is listed with its price, and we can help with financing and trade-ins.',
+      aboutP2: 'We’re a small team, so you’ll deal with the same people from your first call to the day you drive away. Every car on the lot is listed with its price, and we can help with financing.',
       aboutP3: 'Stop by {days}, or call us at {phone}.',
       ownerPhoto: 'Owner photo',
       ownerName: 'Owner name',
@@ -1543,14 +1514,12 @@ window.ELEVATE_CONFIG = {
       methodEmail: 'email',
       sentPrequalT: 'Information sent',
       sentPrequalB: ({ name, phone }) => `${thanks('Thanks', name)} We’ll call or text ${phone} during business hours to go over your financing options.`,
-      sentTradeT: 'Offer request sent',
-      sentTradeB: ({ name, car }) => `${thanks('Thanks', name)} We’ll review your ${car} and follow up with an offer.`,
       sentDefaultT: 'Sent',
       sentDefaultB: () => 'Thanks. We’ll be in touch.',
       yourDay: 'your day',
       yourTime: 'your time',
       theVehicle: 'vehicle',
-      previewNote: 'Preview mode: forms aren’t connected yet, so nothing was sent.',
+      previewNote: 'This is a preview, so nothing was sent. On the published site, forms go to {email}.',
       sendError: 'Your message didn’t send. Call {phone}, or try again.',
 
       titleHome: '{name} | Used cars, trucks, and SUVs in Chicago',
@@ -1635,7 +1604,6 @@ window.ELEVATE_CONFIG = {
       navMain: 'Principal',
       navInventory: 'Inventario',
       navFinancing: 'Financiamiento',
-      navTradein: 'Intercambio',
       navAbout: 'Nosotros',
       navContact: 'Contacto',
       saved: 'Vehículos guardados',
@@ -1664,7 +1632,8 @@ window.ELEVATE_CONFIG = {
       tomorrowDate: 'Mañana, {date}',
 
       heroTitle: 'Autos, pickups y SUVs usados en el suroeste de Chicago',
-      heroText: '{name} es un nuevo concesionario independiente en {street}. Vea lo que tenemos en el lote, precalifique para financiamiento o visítenos {days}.',
+      heroText: '¡Bienvenidos a {name}! Somos un concesionario local de autos usados en Chicago que ofrece vehículos confiables a precios accesibles. ¡Ofrecemos financiamiento! Conozca nuestro inventario.',
+      heroHours: '{days} | {open}–{close}',
       browse: 'Ver inventario',
       prequal: 'Precalificar',
       heroVideoPh: 'Aquí va el video principal',
@@ -1692,9 +1661,6 @@ window.ELEVATE_CONFIG = {
       onLot: 'En el lote ahora',
       financing: 'Financiamiento',
       financingText: 'Llene un formulario breve y le llamaremos con opciones. No necesita número de Seguro Social para empezar.',
-      tradeins: 'Intercambios',
-      tradeinsText: 'Cuéntenos sobre el auto que tiene ahora y le haremos una oferta que puede usar para su próximo auto.',
-      startTradein: 'Iniciar intercambio',
 
       photoSoon: 'Foto próximamente',
       photosSoon: 'Fotos próximamente',
@@ -1766,7 +1732,6 @@ window.ELEVATE_CONFIG = {
       estimate: 'Calcule un pago mensual',
       vehiclePrice: 'Precio del vehículo',
       downPayment: 'Pago inicial',
-      tradeValue: 'Valor de su intercambio',
       apr: 'Tasa de interés (APR)',
       loanLength: 'Plazo del préstamo en meses',
       estPayment: 'Pago estimado',
@@ -1776,7 +1741,6 @@ window.ELEVATE_CONFIG = {
       calcFine: 'Solo es un estimado, no una oferta de crédito. Su tasa y condiciones reales dependen de su crédito y de la aprobación del prestamista. No incluye impuestos, título, placas ni cargos.',
       priceAria: 'Precio del vehículo en dólares',
       downAria: 'Pago inicial en dólares',
-      tradeAria: 'Valor de su intercambio en dólares',
       aprAria: 'Tasa de interés, en porcentaje',
       similar: 'Vehículos similares',
       choosePhoto: 'Elegir una foto',
@@ -1803,9 +1767,6 @@ window.ELEVATE_CONFIG = {
       creditQ: '¿Cómo describiría su crédito?',
       notSure: 'Aún no sé',
       vehicleInterest: 'Vehículo que le interesa',
-      hasTrade: '¿Tiene un auto para intercambiar?',
-      yes: 'Sí',
-      no: 'No',
       anythingElse: '¿Algo más que debamos saber?',
       consentFin: 'Acepto que {name} se comunique conmigo por teléfono, mensaje de texto o correo electrónico sobre financiamiento.',
       stepBack: 'Atrás',
@@ -1823,8 +1784,6 @@ window.ELEVATE_CONFIG = {
       faq2a: 'Este formulario no revisa su crédito. Si decide seguir adelante, un prestamista podría revisar su crédito con su permiso.',
       faq3q: '¿Cuánto debo dar de pago inicial?',
       faq3a: 'Depende del vehículo y de su crédito. Un pago inicial más grande reduce su pago mensual, y podemos revisar los números con usted.',
-      faq4q: '¿Mi auto de intercambio puede contar como pago inicial?',
-      faq4a: 'Sí. El valor de su intercambio puede aplicarse a su pago inicial.',
       calcLede: 'Cambie los números para ver cómo el precio, el pago inicial y el plazo afectan su pago.',
       opt: {
         'Employed full-time': 'Empleado de tiempo completo', 'Employed part-time': 'Empleado de medio tiempo', 'Self-employed': 'Trabajador independiente', Retired: 'Jubilado', Other: 'Otro',
@@ -1832,39 +1791,12 @@ window.ELEVATE_CONFIG = {
         Excellent: 'Excelente', Good: 'Bueno', Fair: 'Regular', Rebuilding: 'En reconstrucción', 'Not sure': 'No estoy seguro',
         '720 and up': '720 o más', '660 to 719': '660 a 719', '600 to 659': '600 a 659', 'Below 600': 'Menos de 600', 'That’s fine': 'No hay problema',
         'Under $500': 'Menos de $500', '$500 to $1,500': '$500 a $1,500', '$1,500 to $3,000': '$1,500 a $3,000', 'Over $3,000': 'Más de $3,000',
-        'Needs work': 'Necesita reparaciones',
-        'No dents, scratches, or mechanical issues': 'Sin abolladuras, rayones ni problemas mecánicos',
-        'Minor wear, and everything works': 'Desgaste menor y todo funciona',
-        'Some dents or repairs needed': 'Algunas abolladuras o reparaciones pendientes',
-        'Major repairs needed or it doesn’t run': 'Necesita reparaciones mayores o no arranca',
-        Call: 'Llamada', Text: 'Texto', Email: 'Correo', Yes: 'Sí', No: 'No',
+        Call: 'Llamada', Text: 'Texto', Email: 'Correo',
       },
-
-      tradeTitle: 'Intercambio',
-      tradeSub: 'Cuéntenos sobre su vehículo y le daremos una oferta que puede usar para su próximo auto.',
-      yourVehicle: 'Su vehículo',
-      trim: 'Versión',
-      color: 'Color',
-      vinOpt: 'VIN <span class="optional">(opcional, agiliza su oferta)</span>',
-      condition: 'Estado',
-      owes: '¿Todavía debe dinero del auto?',
-      yourContact: 'Su información de contacto',
-      requestOffer: 'Solicitar oferta',
-      consentTrade: 'Al enviar, acepta que {name} se comunique con usted sobre su intercambio por teléfono, mensaje de texto o correo electrónico.',
-      howItWorks: 'Cómo funciona',
-      how1: 'Envíe sus datos.',
-      how1s: 'Mientras más nos cuente, más precisa será la oferta.',
-      how2: 'Traiga el auto.',
-      how2s: 'Le damos una revisión rápida en persona.',
-      how3: 'Reciba su oferta.',
-      how3s: 'Úsela para su próximo auto de nuestro lote.',
-      havePhotos: '¿Tiene fotos?',
-      havePhotosText: 'Envíe fotos de su auto por mensaje de texto al {phone} y las agregaremos a su solicitud.',
-      smsTradePhotos: 'Hola, aquí están las fotos de mi auto para intercambio.',
 
       aboutTitle: 'Sobre nosotros',
       aboutLead: '{name} es un concesionario independiente con licencia reciente, ubicado en {street}, {city}.',
-      aboutP2: 'Somos un equipo pequeño, así que tratará con las mismas personas desde su primera llamada hasta el día en que se lleve su auto. Cada auto del lote se publica con su precio, y podemos ayudarle con financiamiento e intercambios.',
+      aboutP2: 'Somos un equipo pequeño, así que tratará con las mismas personas desde su primera llamada hasta el día en que se lleve su auto. Cada auto del lote se publica con su precio, y podemos ayudarle con el financiamiento.',
       aboutP3: 'Visítenos {days} o llámenos al {phone}.',
       ownerPhoto: 'Foto del dueño',
       ownerName: 'Nombre del dueño',
@@ -1905,14 +1837,12 @@ window.ELEVATE_CONFIG = {
       methodEmail: 'correo electrónico',
       sentPrequalT: 'Información enviada',
       sentPrequalB: ({ name, phone }) => `${thanks('Gracias', name)} Le llamaremos o enviaremos un mensaje al ${phone} en horario de atención para repasar sus opciones de financiamiento.`,
-      sentTradeT: 'Solicitud de oferta enviada',
-      sentTradeB: ({ name, car }) => `${thanks('Gracias', name)} Revisaremos su ${car} y le enviaremos una oferta.`,
       sentDefaultT: 'Enviado',
       sentDefaultB: () => 'Gracias. Nos pondremos en contacto.',
       yourDay: 'el día elegido',
       yourTime: 'la hora elegida',
       theVehicle: 'vehículo',
-      previewNote: 'Modo de vista previa: los formularios aún no están conectados, así que no se envió nada.',
+      previewNote: 'Esta es una vista previa, así que no se envió nada. En el sitio publicado, los formularios llegan a {email}.',
       sendError: 'Su mensaje no se envió. Llame al {phone} o intente de nuevo.',
 
       titleHome: '{name} | Autos, pickups y SUVs usados en Chicago',
@@ -1993,7 +1923,7 @@ window.ELEVATE_CONFIG = {
 /* ==========================================================================
    Elevate Auto Sales: site app
    Hash-routed single page: #home, #inventory, #v-<stock>, #financing,
-   #trade-in, #about, #contact, #saved. Reads dealership details from
+   #about, #contact, #saved. Reads dealership details from
    config.js, vehicles from inventory-source.js, and all text from i18n.js.
    ========================================================================== */
 (function () {
@@ -2026,6 +1956,7 @@ window.ELEVATE_CONFIG = {
     phone: '<path d="M6.6 3.5h2.6l1.6 4.3-2.1 1.3a11.5 11.5 0 0 0 6.2 6.2l1.3-2.1 4.3 1.6v2.6a2 2 0 0 1-2.1 2A16.6 16.6 0 0 1 4.6 5.6a2 2 0 0 1 2-2.1z"/>',
     chat: '<path d="M4.5 5.5h15v10.5H10l-4.5 3.5V16h-1z"/>',
     pin: '<path d="M12 21s-6.5-5.8-6.5-11A6.5 6.5 0 0 1 18.5 10C18.5 15.2 12 21 12 21z"/><circle cx="12" cy="10" r="2.3"/>',
+    clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
     heart: '<path d="M12 19.5s-7-4.3-7-9.6A3.9 3.9 0 0 1 12 7.6a3.9 3.9 0 0 1 7 2.3c0 5.3-7 9.6-7 9.6z"/>',
     menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
     close: '<path d="M6 6l12 12M18 6L6 18"/>',
@@ -2125,6 +2056,9 @@ window.ELEVATE_CONFIG = {
   const openDaysPhrase = () => hoursGroups().filter((g) => g.open).map((g) => g.phrase).join(` ${I.pack.joinWord} `);
   const hoursSentence = () => hoursGroups().filter((g) => g.open)
     .map((g) => t('hoursSentence', { days: g.phrase, open: fmtTime(g.hours[0]), close: fmtTime(g.hours[1]) })).join(' ');
+  // "Monday–Saturday | 10 AM–6 PM", one line per group of days with the same hours.
+  const heroHoursLines = () => hoursGroups().filter((g) => g.open)
+    .map((g) => t('heroHours', { days: g.label, open: fmtTime(g.hours[0]), close: fmtTime(g.hours[1]) }));
   const statusMarkup = () => {
     const s = openStatus();
     return `<span class="status${s.open ? ' is-open' : ''}" data-status>${esc(s.text)}</span>`;
@@ -2270,7 +2204,6 @@ window.ELEVATE_CONFIG = {
           <nav class="nav" id="site-nav" aria-label="${esc(t('navMain'))}">
             <a href="#inventory" data-nav="inventory">${esc(t('navInventory'))}</a>
             <a href="#financing" data-nav="financing">${esc(t('navFinancing'))}</a>
-            <a href="#trade-in" data-nav="trade-in">${esc(t('navTradein'))}</a>
             <a href="#about" data-nav="about">${esc(t('navAbout'))}</a>
             <a href="#contact" data-nav="contact">${esc(t('navContact'))}</a>
             <a class="nav-saved" href="#saved" data-nav="saved">${esc(t('saved'))}<span class="saved-count" data-saved-count>${state.saved.size || ''}</span></a>
@@ -2318,7 +2251,7 @@ window.ELEVATE_CONFIG = {
             <h2 class="footer-h">${esc(t('footerContact'))}</h2>
             <ul class="footer-list">
               <li><a href="${telHref}">${esc(C.phoneDisplay)}</a></li>
-              <li><a href="${mailHref()}">${esc(C.email)}</a></li>
+              <li><a class="footer-email" href="${mailHref()}">${esc(C.email).replace('@', '<wbr>@')}</a></li>
             </ul>
           </div>
           <nav aria-label="${esc(t('footerNav'))}">
@@ -2326,7 +2259,6 @@ window.ELEVATE_CONFIG = {
             <ul class="footer-list">
               <li><a href="#inventory">${esc(t('navInventory'))}</a></li>
               <li><a href="#financing">${esc(t('navFinancing'))}</a></li>
-              <li><a href="#trade-in">${esc(t('navTradein'))}</a></li>
               <li><a href="#about">${esc(t('navAbout'))}</a></li>
             </ul>
           </nav>
@@ -2447,7 +2379,12 @@ window.ELEVATE_CONFIG = {
       <div class="hero-shade" aria-hidden="true"></div>
       <div class="wrap hero-content">
         <h1 class="hero-title" id="hero-title">${esc(t('heroTitle'))}</h1>
-        <p class="hero-text">${esc(t('heroText', { name: C.name, street: addr.street, days: openDaysPhrase() }))}</p>
+        <p class="hero-text">${esc(t('heroText', { name: C.name }))}</p>
+        <ul class="hero-facts">
+          <li><a href="${C.directionsUrl}" target="_blank" rel="noopener">${icon('pin')}<span>${esc(addressLine)}</span></a></li>
+          ${heroHoursLines().map((line) => `<li>${icon('clock')}<span>${esc(line)}</span></li>`).join('')}
+        </ul>
+        <p class="hero-tagline" lang="en">${esc(C.tagline)}</p>
         <div class="btn-row hero-actions">
           <a class="btn btn--primary btn--lg" href="#inventory">${esc(t('browse'))}</a>
           <a class="btn btn--light btn--lg" href="#financing">${esc(t('prequal'))}</a>
@@ -2573,9 +2510,8 @@ window.ELEVATE_CONFIG = {
           <a class="btn btn--primary" href="#financing">${esc(t('prequal'))}</a>
         </div>
         <div class="two-up-item">
-          <h2 class="section-title">${esc(t('tradeins'))}</h2>
-          <p>${esc(t('tradeinsText'))}</p>
-          <a class="btn btn--outline" href="#trade-in">${esc(t('startTradein'))}</a>
+          <h2 class="section-title">${esc(t('bring'))}</h2>
+          ${bringList('two-up-list')}
         </div>
       </div>
     </section>`;
@@ -2823,6 +2759,8 @@ window.ELEVATE_CONFIG = {
         <label class="field"><span class="field-label">${esc(t('time'))}</span><select name="time">${timeSlots().map((s) => `<option value="${esc(s.value)}">${esc(s.label)}</option>`).join('')}</select></label>
       </div>
       <label class="field"><span class="field-label">${esc(t('message'))}</span><textarea name="message" rows="3">${esc(intentMessage('availability', v))}</textarea></label>
+      ${honeypot()}
+      <p class="form-error" data-form-error hidden></p>
       <button class="btn btn--primary btn--block" type="submit">${esc(t('sendMessage'))}</button>
       <p class="fine">${esc(t('consentVehicle', { name: C.name }))}</p>
     </form>`;
@@ -2831,12 +2769,10 @@ window.ELEVATE_CONFIG = {
   function calculator(price) {
     return `<div class="calc" data-calc>
       <div class="calc-inputs">
-        <label class="field"><span class="field-label">${esc(t('vehiclePrice'))}</span>
+        <label class="field field--wide"><span class="field-label">${esc(t('vehiclePrice'))}</span>
           <span class="input-affix"><span aria-hidden="true">$</span><input name="price" inputmode="numeric" value="${num.format(price)}" aria-label="${esc(t('priceAria'))}"></span></label>
         <label class="field"><span class="field-label">${esc(t('downPayment'))}</span>
           <span class="input-affix"><span aria-hidden="true">$</span><input name="down" inputmode="numeric" value="2,000" aria-label="${esc(t('downAria'))}"></span></label>
-        <label class="field"><span class="field-label">${esc(t('tradeValue'))}</span>
-          <span class="input-affix"><span aria-hidden="true">$</span><input name="trade" inputmode="numeric" value="0" aria-label="${esc(t('tradeAria'))}"></span></label>
         <label class="field"><span class="field-label">${esc(t('apr'))}</span>
           <span class="input-affix"><input name="apr" inputmode="decimal" value="9.9" aria-label="${esc(t('aprAria'))}"><span aria-hidden="true">%</span></span></label>
         <fieldset class="field field--wide"><legend class="field-label">${esc(t('loanLength'))}</legend>
@@ -2856,7 +2792,7 @@ window.ELEVATE_CONFIG = {
 
   function computeCalc(root) {
     const val = (n) => parseNum($(`[name="${n}"]`, root).value);
-    const principal = Math.max(0, val('price') - val('down') - val('trade'));
+    const principal = Math.max(0, val('price') - val('down'));
     const rate = val('apr') / 100 / 12;
     const term = Number(($('[name="term"]:checked', root) || {}).value || 60);
     const payment = principal === 0 ? 0 : (rate === 0 ? principal / term : (principal * rate) / (1 - ((1 + rate) ** -term)));
@@ -2983,6 +2919,9 @@ window.ELEVATE_CONFIG = {
   }
 
   /* ---------- Financing ---------- */
+  // Credit choices and the range shown under each (also used in lead emails).
+  const CREDIT = [['Excellent', '720 and up'], ['Good', '660 to 719'], ['Fair', '600 to 659'], ['Rebuilding', 'Below 600'], ['Not sure', 'That’s fine']];
+  const bringList = (cls = '') => `<ul class="plain-list${cls ? ` ${cls}` : ''}">${[1, 2, 3, 4].map((i) => `<li>${esc(t(`bring${i}`))}</li>`).join('')}</ul>`;
   const choiceCards = (name, items, requiredFirst = true) => items.map(([value, sub], i) => `<label class="choice"><input type="radio" name="${name}" value="${esc(value)}"${i === 0 && requiredFirst ? ' required' : ''}><span><strong>${esc(I.opt(value))}</strong><small>${esc(I.opt(sub))}</small></span></label>`).join('');
 
   function viewFinancing() {
@@ -3019,7 +2958,7 @@ window.ELEVATE_CONFIG = {
                 <select name="income" required><option value="">${esc(t('chooseRange'))}</option>${options(['Under $2,000', '$2,000 to $3,000', '$3,000 to $4,500', '$4,500 to $6,000', 'Over $6,000'], '', I.opt)}</select></label>
             </div>
             <fieldset class="field"><legend class="field-label">${esc(t('creditQ'))}</legend>
-              <div class="choice-grid">${choiceCards('credit', [['Excellent', '720 and up'], ['Good', '660 to 719'], ['Fair', '600 to 659'], ['Rebuilding', 'Below 600'], ['Not sure', 'That’s fine']])}</div></fieldset>
+              <div class="choice-grid">${choiceCards('credit', CREDIT)}</div></fieldset>
             <label class="field field--short"><span class="field-label">${esc(t('downPayment'))}</span>
               <select name="down"><option value="">${esc(t('notSure'))}</option>${options(['Under $500', '$500 to $1,500', '$1,500 to $3,000', 'Over $3,000'], '', I.opt)}</select></label>
           </fieldset>
@@ -3027,11 +2966,10 @@ window.ELEVATE_CONFIG = {
             <legend class="step-legend">${esc(t('legendVehicle'))}</legend>
             <label class="field"><span class="field-label">${esc(t('vehicleInterest'))}</span>
               <select name="vehicle"><option value="">${esc(t('notSure'))}</option>${vehicles.map((v) => `<option value="${esc(v.stockNumber)}">${esc(`${v.title} ${v.trim}, ${money(v.price)}`)}</option>`).join('')}</select></label>
-            <fieldset class="field"><legend class="field-label">${esc(t('hasTrade'))}</legend>
-              <div class="chips">${chips('hasTrade', ['Yes', 'No'], '', I.opt)}</div></fieldset>
             <label class="field"><span class="field-label">${esc(t('anythingElse'))} <span class="optional">${esc(opt)}</span></span><textarea name="notes" rows="3"></textarea></label>
             <label class="check"><input type="checkbox" name="consent" required><span>${esc(t('consentFin', { name: C.name }))}</span></label>
           </fieldset>
+          ${honeypot()}
           <p class="form-error" data-form-error hidden></p>
           <div class="step-nav">
             <button class="btn btn--outline" type="button" data-step-back hidden>${esc(t('stepBack'))}</button>
@@ -3042,15 +2980,10 @@ window.ELEVATE_CONFIG = {
       </div>
       <aside class="fin-aside">
         <h2 class="aside-h">${esc(t('bring'))}</h2>
-        <ul class="plain-list">
-          <li>${esc(t('bring1'))}</li>
-          <li>${esc(t('bring2'))}</li>
-          <li>${esc(t('bring3'))}</li>
-          <li>${esc(t('bring4'))}</li>
-        </ul>
+        ${bringList()}
         <h2 class="aside-h">${esc(t('questions'))}</h2>
         <div class="faq">
-          ${[1, 2, 3, 4].map((i) => `<details><summary>${esc(t(`faq${i}q`))}</summary><p>${esc(t(`faq${i}a`))}</p></details>`).join('')}
+          ${[1, 2, 3].map((i) => `<details><summary>${esc(t(`faq${i}q`))}</summary><p>${esc(t(`faq${i}a`))}</p></details>`).join('')}
         </div>
       </aside>
     </div>
@@ -3098,57 +3031,6 @@ window.ELEVATE_CONFIG = {
       }
     });
     wireCalcs();
-  }
-
-  /* ---------- Trade-in ---------- */
-  function viewTradeIn() {
-    const opt = t('optional');
-    return `
-    ${pageTop(t('tradeTitle'), t('tradeSub'))}
-    <div class="wrap fin">
-      <div class="fin-main">
-        <form class="panel form-stack" data-lead="trade">
-          <h2 class="form-h">${esc(t('yourVehicle'))}</h2>
-          <div class="field-row field-row--3">
-            <label class="field"><span class="field-label">${esc(t('year'))}</span><input name="year" required inputmode="numeric" maxlength="4" pattern="(19|20)[0-9]{2}"></label>
-            <label class="field"><span class="field-label">${esc(t('make'))}</span><input name="make" required></label>
-            <label class="field"><span class="field-label">${esc(t('model'))}</span><input name="model" required></label>
-          </div>
-          <div class="field-row field-row--3">
-            <label class="field"><span class="field-label">${esc(t('trim'))} <span class="optional">${esc(opt)}</span></span><input name="trim"></label>
-            <label class="field"><span class="field-label">${esc(t('mileage'))}</span><input name="mileage" required inputmode="numeric"></label>
-            <label class="field"><span class="field-label">${esc(t('color'))} <span class="optional">${esc(opt)}</span></span><input name="color"></label>
-          </div>
-          <label class="field"><span class="field-label">${t('vinOpt')}</span><input name="vin" maxlength="17" autocapitalize="characters" spellcheck="false"></label>
-          <fieldset class="field"><legend class="field-label">${esc(t('condition'))}</legend>
-            <div class="choice-grid choice-grid--wide">${choiceCards('condition', [['Excellent', 'No dents, scratches, or mechanical issues'], ['Good', 'Minor wear, and everything works'], ['Fair', 'Some dents or repairs needed'], ['Needs work', 'Major repairs needed or it doesn’t run']])}</div></fieldset>
-          <fieldset class="field"><legend class="field-label">${esc(t('owes'))}</legend>
-            <div class="chips">${chips('owes', ['Yes', 'No'], '', I.opt)}</div></fieldset>
-          <h2 class="form-h">${esc(t('yourContact'))}</h2>
-          <div class="field-row">
-            <label class="field"><span class="field-label">${esc(t('firstName'))}</span><input name="firstName" required autocomplete="given-name"></label>
-            <label class="field"><span class="field-label">${esc(t('lastName'))}</span><input name="lastName" autocomplete="family-name"></label>
-          </div>
-          <div class="field-row">
-            <label class="field"><span class="field-label">${esc(t('phone'))}</span><input name="phone" type="tel" required autocomplete="tel" inputmode="tel"></label>
-            <label class="field"><span class="field-label">${esc(t('email'))} <span class="optional">${esc(opt)}</span></span><input name="email" type="email" autocomplete="email"></label>
-          </div>
-          <p class="form-error" data-form-error hidden></p>
-          <button class="btn btn--primary btn--lg" type="submit">${esc(t('requestOffer'))}</button>
-          <p class="fine">${esc(t('consentTrade', { name: C.name }))}</p>
-        </form>
-      </div>
-      <aside class="fin-aside">
-        <h2 class="aside-h">${esc(t('howItWorks'))}</h2>
-        <ol class="numbered-list">
-          <li><strong>${esc(t('how1'))}</strong> ${esc(t('how1s'))}</li>
-          <li><strong>${esc(t('how2'))}</strong> ${esc(t('how2s'))}</li>
-          <li><strong>${esc(t('how3'))}</strong> ${esc(t('how3s'))}</li>
-        </ol>
-        <h2 class="aside-h">${esc(t('havePhotos'))}</h2>
-        <p class="aside-text">${t('havePhotosText', { phone: `<a class="text-link" href="${smsHref(t('smsTradePhotos'))}">${esc(C.phoneDisplay)}</a>` })}</p>
-      </aside>
-    </div>`;
   }
 
   /* ---------- About ---------- */
@@ -3202,6 +3084,7 @@ window.ELEVATE_CONFIG = {
                 ${['Call', 'Text', 'Email'].map((m, i) => `<label class="seg-opt"><input type="radio" name="contactBy" value="${m}"${i === 0 ? ' checked' : ''}><span>${esc(I.opt(m))}</span></label>`).join('')}
               </div></fieldset>
             <label class="field"><span class="field-label">${esc(t('message'))}</span><textarea name="message" rows="4" required></textarea></label>
+            ${honeypot()}
             <p class="form-error" data-form-error hidden></p>
             <button class="btn btn--primary btn--lg" type="submit">${esc(t('sendMessage'))}</button>
             <p class="fine">${esc(t('consentContact', { name: C.name }))}</p>
@@ -3257,15 +3140,119 @@ window.ELEVATE_CONFIG = {
   }
 
   /* ---------- Forms (leads) ---------- */
-  async function sendLead(kind, data) {
-    const payload = { kind, language: I.lang, data, page: location.hash || '#home', submittedAt: new Date().toISOString() };
-    if (!C.leadEndpoint) {
-      console.info('[Preview] Lead not sent because leadEndpoint is not set in config.js:', payload);
+  // Every form is emailed to the dealership through FormSubmit (config.js
+  // leadEndpoint; README, "Form emails"). The email is a table of labeled rows
+  // in English, whichever language the visitor used.
+
+  // Nothing is sent from the chat preview build, from a page opened as a file,
+  // or from a local test server, so testing never emails the dealership by
+  // accident. Add ?send=1 to a local address to send for real.
+  const isLocal = location.protocol === 'file:' || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+  const forceSend = /[?&]send=1(&|$)/.test(location.search);
+  const previewMode = () => !C.leadEndpoint || !!window.ELEVATE_PREVIEW || (isLocal && !forceSend);
+
+  // Hidden from people and screen readers. Bots that fill in every field fill
+  // this too, and those submissions are dropped without sending.
+  const honeypot = () => '<input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">';
+
+  const FORM_NAMES = {
+    prequal: 'Financing application',
+    availability: 'Vehicle question',
+    'test-drive': 'Test drive request',
+    financing: 'Financing question',
+    contact: 'Contact message',
+  };
+  const sentAt = () => `${new Intl.DateTimeFormat('en-US', { timeZone: C.timeZone, dateStyle: 'medium', timeStyle: 'short' }).format(new Date())} (Chicago time)`;
+
+  function leadVehicle(kind, data, form) {
+    if (form.dataset.vehicle) return byId(form.dataset.vehicle) || null;
+    if (kind === 'prequal' && data.vehicle) return state.inventory.find((v) => v.stockNumber === data.vehicle) || null;
+    return null;
+  }
+
+  // The email: FormSubmit settings (underscored) first, then one row per answer.
+  function leadEmail(kind, data, form) {
+    const name = [data.firstName, data.lastName].map((x) => (x || '').trim()).filter(Boolean).join(' ');
+    const v = leadVehicle(kind, data, form);
+    const car = v ? `${v.year} ${v.make} ${v.model}` : '';
+    const subject = {
+      prequal: `Financing application from ${name}${car ? ` (${car})` : ''}`,
+      availability: `${name} asked about the ${car}`,
+      'test-drive': `Test drive request: ${car}, ${data.day} at ${data.time}`,
+      financing: `${name} asked about financing the ${car}`,
+      contact: `Website message from ${name}`,
+    }[kind] || `Website form from ${name}`;
+
+    const mail = {
+      _subject: `${subject}${I.lang === 'es' ? ' (en español)' : ''}`,
+      _template: 'table',
+      _captcha: 'false',
+      _url: location.href,
+    };
+    const row = (label, value) => { if (value !== undefined && value !== null && String(value).trim() !== '') mail[label] = String(value).trim(); };
+    const vehicleLine = v ? `${vehicleRefEn(v)}, ${money(v.price)}` : '';
+
+    row('Form', FORM_NAMES[kind] || kind);
+    row('Name', name);
+    row('Phone', data.phone);
+    // FormSubmit sets Reply-To from a field named "email", so Reply answers the customer.
+    if (data.email) { mail._replyto = data.email.trim(); row('email', data.email); }
+
+    if (kind === 'prequal') {
+      const credit = CREDIT.find(([value]) => value === data.credit);
+      row('ZIP code', data.zip);
+      row('Employment', data.employment);
+      row('Monthly income', data.income);
+      row('Credit', credit && credit[0] !== 'Not sure' ? `${credit[0]} (${credit[1]})` : data.credit);
+      row('Down payment', data.down || 'Not sure yet');
+      row('Vehicle', vehicleLine || 'Not sure yet');
+      if (v) row('VIN', v.vin);
+      row('Notes', data.notes);
+      row('Agreed to be contacted', data.consent ? 'Yes' : '');
+    } else if (kind === 'contact') {
+      row('Best way to reach', data.contactBy);
+      row('Message', data.message);
+    } else {
+      row('Vehicle', vehicleLine);
+      if (v) row('VIN', v.vin);
+      if (kind === 'test-drive') { row('Preferred day', data.day); row('Preferred time', data.time); }
+      row('Message', data.message);
+    }
+    row('Language', I.lang === 'es' ? 'Spanish' : 'English');
+    row('Page', location.href);
+    row('Sent', sentAt());
+    return mail;
+  }
+
+  async function sendLead(kind, data, form) {
+    const mail = leadEmail(kind, data, form);
+    if (previewMode()) {
+      console.info('[Preview] Nothing was sent. On the live site, this email goes to the dealership:', mail);
       await wait(450);
       return { preview: true };
     }
-    const res = await fetch(C.leadEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-    if (!res.ok) throw new Error(`Lead endpoint responded with ${res.status}`);
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 15000);
+    let res;
+    try {
+      res = await fetch(C.leadEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(mail),
+        signal: ctrl.signal,
+      });
+    } finally {
+      clearTimeout(timer);
+    }
+    const reply = await res.json().catch(() => ({}));
+    // Until the inbox owner clicks "Activate Form" in FormSubmit's first email,
+    // it answers success "false" but keeps the submission and sends it after
+    // activation, so the visitor still sees that it went through.
+    const awaitingActivation = /activat/i.test(String(reply.message || ''));
+    if (!res.ok || (String(reply.success) === 'false' && !awaitingActivation)) {
+      throw new Error(`Form service didn't accept the lead (${res.status}): ${reply.message || 'no message'}`);
+    }
+    if (awaitingActivation) console.warn('[Leads] FormSubmit:', reply.message);
     return { preview: false };
   }
 
@@ -3274,7 +3261,6 @@ window.ELEVATE_CONFIG = {
     const name = data.firstName || '';
     const v = form.dataset.vehicle ? byId(form.dataset.vehicle) : null;
     const vehicle = v ? v.title : t('theVehicle');
-    const car = [data.year, data.make, data.model].filter(Boolean).join(' ') || t('theVehicle');
     const timeLabel = data.time ? (timeSlots().find((s) => s.value === data.time) || { label: data.time }).label : t('yourTime');
     const dayLabel = data.day ? ((upcomingOpenDays().find((d) => d.value === data.day) || { date: data.day }).date) : t('yourDay');
     const map = {
@@ -3283,7 +3269,6 @@ window.ELEVATE_CONFIG = {
       financing: ['sentFinT', 'sentFinB', { name, vehicle }],
       contact: ['sentContactT', 'sentContactB', { name, method: t(METHOD_KEY[data.contactBy] || 'methodPhone') }],
       prequal: ['sentPrequalT', 'sentPrequalB', { name, phone: data.phone || '' }],
-      trade: ['sentTradeT', 'sentTradeB', { name, car }],
     }[kind] || ['sentDefaultT', 'sentDefaultB', {}];
     return [t(map[0]), t(map[1], map[2])];
   }
@@ -3299,10 +3284,8 @@ window.ELEVATE_CONFIG = {
     }
     const kind = form.dataset.lead;
     const data = Object.fromEntries(new FormData(form).entries());
-    if (form.dataset.vehicle) {
-      const v = byId(form.dataset.vehicle);
-      if (v) { data.vehicle = vehicleRefEn(v); data.vin = v.vin; }
-    }
+    const trapped = !!data._honey;
+    delete data._honey;
     const submit = $('[type="submit"]:not([hidden])', form);
     const err = $('[data-form-error]', form);
     const label = submit.textContent;
@@ -3310,13 +3293,13 @@ window.ELEVATE_CONFIG = {
     submit.textContent = t('sending');
     if (err) err.hidden = true;
     try {
-      const result = await sendLead(kind, data);
+      const result = trapped ? { preview: false } : await sendLead(kind, data, form);
       const [title, body] = doneMessage(kind, data, form);
       form.innerHTML = `<div class="form-done" role="status" tabindex="-1">
         <span class="done-icon">${icon('check')}</span>
         <h2 class="form-h">${esc(title)}</h2>
         <p>${esc(body)}</p>
-        ${result.preview ? `<p class="preview-note">${esc(t('previewNote'))}</p>` : ''}
+        ${result.preview ? `<p class="preview-note">${esc(t('previewNote', { email: C.email }))}</p>` : ''}
         <a class="btn btn--outline" href="#inventory">${esc(t('browse'))}</a>
       </div>`;
       form.classList.add('is-done');
@@ -3334,7 +3317,6 @@ window.ELEVATE_CONFIG = {
     home: { title: () => '', render: viewHome, after: afterHome },
     inventory: { title: () => t('invTitle'), render: viewInventory, after: afterInventory },
     financing: { title: () => t('finTitle'), render: viewFinancing, after: afterFinancing },
-    'trade-in': { title: () => t('tradeTitle'), render: viewTradeIn },
     about: { title: () => t('aboutTitle'), render: viewAbout },
     contact: { title: () => t('contactTitle'), render: viewContact },
     saved: { title: () => t('savedTitle'), render: viewSaved },

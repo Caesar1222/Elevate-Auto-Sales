@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Bundle the site into one self-contained HTML file.
 
-    python3 build.py            -> dist/elevate-auto-sales.html
+    python3 build.py            -> dist/elevate-auto-sales.html          (forms send)
+    python3 build.py --preview  -> dist/elevate-auto-sales-preview.html  (forms never send)
 
 The bundle inlines css/styles.css, every js/*.js file referenced by
 index.html, and data/inventory.json, so it opens with a double-click and can
@@ -9,15 +10,20 @@ be shared or hosted as a single file. Local images that js/config.js points
 to (like assets/hero-photo.jpg) are embedded too. Blocks wrapped in
 <!-- build:remove --> ... <!-- /build:remove --> are dropped (they point at
 local asset files that don't exist inside a single-file bundle).
+
+The --preview copy is for sharing a look at the site (like the chat preview
+link): its forms show a confirmation but never email the dealership.
 """
 import base64
 import json
 import mimetypes
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-OUT = ROOT / "dist" / "elevate-auto-sales.html"
+PREVIEW = "--preview" in sys.argv[1:]
+OUT = ROOT / "dist" / ("elevate-auto-sales-preview.html" if PREVIEW else "elevate-auto-sales.html")
 
 
 def main() -> None:
@@ -50,6 +56,10 @@ def main() -> None:
         return f"<script>\n{code}\n</script>"
 
     html = re.sub(r'<script src="(js/[^"]+)"></script>', inline_script, html)
+    if PREVIEW:
+        # Read by app.js: forms show their confirmation but never send.
+        marker = '<div id="shell-bottom"></div>'
+        html = html.replace(marker, marker + "\n  <script>window.ELEVATE_PREVIEW = true;</script>", 1)
     # Embedded inventory must exist before inventory-source.js runs.
     html = html.replace("<div id=\"shell-bottom\"></div>", f"<div id=\"shell-bottom\"></div>\n  {data_tag}", 1)
 

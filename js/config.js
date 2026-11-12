@@ -5,11 +5,11 @@ window.ELEVATE_CONFIG = {
   name: 'Elevate Auto Sales',
   legalName: 'Elevate Auto Sales LLC',
   owner: 'Axel Munoz', // shown on the About page
-  tagline: 'Drive higher, drive better.',
+  tagline: 'Drive Higher. Drive Better.', // as written on the banner
 
   phoneDisplay: '(773) 373-5448',
   phoneE164: '+17733735448',
-  email: 'elevatellc47@gmail.com',
+  email: 'elevatellc47@gmail.com', // shown on the site; form emails go here too (leadEndpoint)
 
   address: {
     street: '5247 W 47th St',
@@ -50,8 +50,13 @@ window.ELEVATE_CONFIG = {
     position: 'center',
   },
 
-  // Where form submissions (leads) are sent. null keeps the site in preview
-  // mode: forms show a confirmation but nothing leaves the browser.
-  // Later: a form service URL, or the CRM/inventory system's lead endpoint.
-  leadEndpoint: null,
+  // Where form submissions (leads) go. FormSubmit (formsubmit.co, free, no
+  // account) emails each one to the address at the end of this URL. The first
+  // submission from the live site sends an "Activate Form" email to that inbox;
+  // click it once (FormSubmit holds anything sent before then and delivers it
+  // after activation). Once activated, FormSubmit also sends a random string
+  // that can replace the address here, so the address isn't in the page code.
+  // Nothing sends from the chat preview, a file, or localhost (see README,
+  // "Form emails"). null turns sending off everywhere.
+  leadEndpoint: 'https://formsubmit.co/ajax/elevatellc47@gmail.com',
 };

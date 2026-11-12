@@ -1,7 +1,7 @@
 /* ==========================================================================
    Elevate Auto Sales: site app
    Hash-routed single page: #home, #inventory, #v-<stock>, #financing,
-   #trade-in, #about, #contact, #saved. Reads dealership details from
+   #about, #contact, #saved. Reads dealership details from
    config.js, vehicles from inventory-source.js, and all text from i18n.js.
    ========================================================================== */
 (function () {
@@ -34,6 +34,7 @@
     phone: '<path d="M6.6 3.5h2.6l1.6 4.3-2.1 1.3a11.5 11.5 0 0 0 6.2 6.2l1.3-2.1 4.3 1.6v2.6a2 2 0 0 1-2.1 2A16.6 16.6 0 0 1 4.6 5.6a2 2 0 0 1 2-2.1z"/>',
     chat: '<path d="M4.5 5.5h15v10.5H10l-4.5 3.5V16h-1z"/>',
     pin: '<path d="M12 21s-6.5-5.8-6.5-11A6.5 6.5 0 0 1 18.5 10C18.5 15.2 12 21 12 21z"/><circle cx="12" cy="10" r="2.3"/>',
+    clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
     heart: '<path d="M12 19.5s-7-4.3-7-9.6A3.9 3.9 0 0 1 12 7.6a3.9 3.9 0 0 1 7 2.3c0 5.3-7 9.6-7 9.6z"/>',
     menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
     close: '<path d="M6 6l12 12M18 6L6 18"/>',
@@ -133,6 +134,9 @@
   const openDaysPhrase = () => hoursGroups().filter((g) => g.open).map((g) => g.phrase).join(` ${I.pack.joinWord} `);
   const hoursSentence = () => hoursGroups().filter((g) => g.open)
     .map((g) => t('hoursSentence', { days: g.phrase, open: fmtTime(g.hours[0]), close: fmtTime(g.hours[1]) })).join(' ');
+  // "Monday–Saturday | 10 AM–6 PM", one line per group of days with the same hours.
+  const heroHoursLines = () => hoursGroups().filter((g) => g.open)
+    .map((g) => t('heroHours', { days: g.label, open: fmtTime(g.hours[0]), close: fmtTime(g.hours[1]) }));
   const statusMarkup = () => {
     const s = openStatus();
     return `<span class="status${s.open ? ' is-open' : ''}" data-status>${esc(s.text)}</span>`;
@@ -278,7 +282,6 @@
           <nav class="nav" id="site-nav" aria-label="${esc(t('navMain'))}">
             <a href="#inventory" data-nav="inventory">${esc(t('navInventory'))}</a>
             <a href="#financing" data-nav="financing">${esc(t('navFinancing'))}</a>
-            <a href="#trade-in" data-nav="trade-in">${esc(t('navTradein'))}</a>
             <a href="#about" data-nav="about">${esc(t('navAbout'))}</a>
             <a href="#contact" data-nav="contact">${esc(t('navContact'))}</a>
             <a class="nav-saved" href="#saved" data-nav="saved">${esc(t('saved'))}<span class="saved-count" data-saved-count>${state.saved.size || ''}</span></a>
@@ -326,7 +329,7 @@
             <h2 class="footer-h">${esc(t('footerContact'))}</h2>
             <ul class="footer-list">
               <li><a href="${telHref}">${esc(C.phoneDisplay)}</a></li>
-              <li><a href="${mailHref()}">${esc(C.email)}</a></li>
+              <li><a class="footer-email" href="${mailHref()}">${esc(C.email).replace('@', '<wbr>@')}</a></li>
             </ul>
           </div>
           <nav aria-label="${esc(t('footerNav'))}">
@@ -334,7 +337,6 @@
             <ul class="footer-list">
               <li><a href="#inventory">${esc(t('navInventory'))}</a></li>
               <li><a href="#financing">${esc(t('navFinancing'))}</a></li>
-              <li><a href="#trade-in">${esc(t('navTradein'))}</a></li>
               <li><a href="#about">${esc(t('navAbout'))}</a></li>
             </ul>
           </nav>
@@ -455,7 +457,12 @@
       <div class="hero-shade" aria-hidden="true"></div>
       <div class="wrap hero-content">
         <h1 class="hero-title" id="hero-title">${esc(t('heroTitle'))}</h1>
-        <p class="hero-text">${esc(t('heroText', { name: C.name, street: addr.street, days: openDaysPhrase() }))}</p>
+        <p class="hero-text">${esc(t('heroText', { name: C.name }))}</p>
+        <ul class="hero-facts">
+          <li><a href="${C.directionsUrl}" target="_blank" rel="noopener">${icon('pin')}<span>${esc(addressLine)}</span></a></li>
+          ${heroHoursLines().map((line) => `<li>${icon('clock')}<span>${esc(line)}</span></li>`).join('')}
+        </ul>
+        <p class="hero-tagline" lang="en">${esc(C.tagline)}</p>
         <div class="btn-row hero-actions">
           <a class="btn btn--primary btn--lg" href="#inventory">${esc(t('browse'))}</a>
           <a class="btn btn--light btn--lg" href="#financing">${esc(t('prequal'))}</a>
@@ -581,9 +588,8 @@
           <a class="btn btn--primary" href="#financing">${esc(t('prequal'))}</a>
         </div>
         <div class="two-up-item">
-          <h2 class="section-title">${esc(t('tradeins'))}</h2>
-          <p>${esc(t('tradeinsText'))}</p>
-          <a class="btn btn--outline" href="#trade-in">${esc(t('startTradein'))}</a>
+          <h2 class="section-title">${esc(t('bring'))}</h2>
+          ${bringList('two-up-list')}
         </div>
       </div>
     </section>`;
@@ -831,6 +837,8 @@
         <label class="field"><span class="field-label">${esc(t('time'))}</span><select name="time">${timeSlots().map((s) => `<option value="${esc(s.value)}">${esc(s.label)}</option>`).join('')}</select></label>
       </div>
       <label class="field"><span class="field-label">${esc(t('message'))}</span><textarea name="message" rows="3">${esc(intentMessage('availability', v))}</textarea></label>
+      ${honeypot()}
+      <p class="form-error" data-form-error hidden></p>
       <button class="btn btn--primary btn--block" type="submit">${esc(t('sendMessage'))}</button>
       <p class="fine">${esc(t('consentVehicle', { name: C.name }))}</p>
     </form>`;
@@ -839,12 +847,10 @@
   function calculator(price) {
     return `<div class="calc" data-calc>
       <div class="calc-inputs">
-        <label class="field"><span class="field-label">${esc(t('vehiclePrice'))}</span>
+        <label class="field field--wide"><span class="field-label">${esc(t('vehiclePrice'))}</span>
           <span class="input-affix"><span aria-hidden="true">$</span><input name="price" inputmode="numeric" value="${num.format(price)}" aria-label="${esc(t('priceAria'))}"></span></label>
         <label class="field"><span class="field-label">${esc(t('downPayment'))}</span>
           <span class="input-affix"><span aria-hidden="true">$</span><input name="down" inputmode="numeric" value="2,000" aria-label="${esc(t('downAria'))}"></span></label>
-        <label class="field"><span class="field-label">${esc(t('tradeValue'))}</span>
-          <span class="input-affix"><span aria-hidden="true">$</span><input name="trade" inputmode="numeric" value="0" aria-label="${esc(t('tradeAria'))}"></span></label>
         <label class="field"><span class="field-label">${esc(t('apr'))}</span>
           <span class="input-affix"><input name="apr" inputmode="decimal" value="9.9" aria-label="${esc(t('aprAria'))}"><span aria-hidden="true">%</span></span></label>
         <fieldset class="field field--wide"><legend class="field-label">${esc(t('loanLength'))}</legend>
@@ -864,7 +870,7 @@
 
   function computeCalc(root) {
     const val = (n) => parseNum($(`[name="${n}"]`, root).value);
-    const principal = Math.max(0, val('price') - val('down') - val('trade'));
+    const principal = Math.max(0, val('price') - val('down'));
     const rate = val('apr') / 100 / 12;
     const term = Number(($('[name="term"]:checked', root) || {}).value || 60);
     const payment = principal === 0 ? 0 : (rate === 0 ? principal / term : (principal * rate) / (1 - ((1 + rate) ** -term)));
@@ -991,6 +997,9 @@
   }
 
   /* ---------- Financing ---------- */
+  // Credit choices and the range shown under each (also used in lead emails).
+  const CREDIT = [['Excellent', '720 and up'], ['Good', '660 to 719'], ['Fair', '600 to 659'], ['Rebuilding', 'Below 600'], ['Not sure', 'That’s fine']];
+  const bringList = (cls = '') => `<ul class="plain-list${cls ? ` ${cls}` : ''}">${[1, 2, 3, 4].map((i) => `<li>${esc(t(`bring${i}`))}</li>`).join('')}</ul>`;
   const choiceCards = (name, items, requiredFirst = true) => items.map(([value, sub], i) => `<label class="choice"><input type="radio" name="${name}" value="${esc(value)}"${i === 0 && requiredFirst ? ' required' : ''}><span><strong>${esc(I.opt(value))}</strong><small>${esc(I.opt(sub))}</small></span></label>`).join('');
 
   function viewFinancing() {
@@ -1027,7 +1036,7 @@
                 <select name="income" required><option value="">${esc(t('chooseRange'))}</option>${options(['Under $2,000', '$2,000 to $3,000', '$3,000 to $4,500', '$4,500 to $6,000', 'Over $6,000'], '', I.opt)}</select></label>
             </div>
             <fieldset class="field"><legend class="field-label">${esc(t('creditQ'))}</legend>
-              <div class="choice-grid">${choiceCards('credit', [['Excellent', '720 and up'], ['Good', '660 to 719'], ['Fair', '600 to 659'], ['Rebuilding', 'Below 600'], ['Not sure', 'That’s fine']])}</div></fieldset>
+              <div class="choice-grid">${choiceCards('credit', CREDIT)}</div></fieldset>
             <label class="field field--short"><span class="field-label">${esc(t('downPayment'))}</span>
               <select name="down"><option value="">${esc(t('notSure'))}</option>${options(['Under $500', '$500 to $1,500', '$1,500 to $3,000', 'Over $3,000'], '', I.opt)}</select></label>
           </fieldset>
@@ -1035,11 +1044,10 @@
             <legend class="step-legend">${esc(t('legendVehicle'))}</legend>
             <label class="field"><span class="field-label">${esc(t('vehicleInterest'))}</span>
               <select name="vehicle"><option value="">${esc(t('notSure'))}</option>${vehicles.map((v) => `<option value="${esc(v.stockNumber)}">${esc(`${v.title} ${v.trim}, ${money(v.price)}`)}</option>`).join('')}</select></label>
-            <fieldset class="field"><legend class="field-label">${esc(t('hasTrade'))}</legend>
-              <div class="chips">${chips('hasTrade', ['Yes', 'No'], '', I.opt)}</div></fieldset>
             <label class="field"><span class="field-label">${esc(t('anythingElse'))} <span class="optional">${esc(opt)}</span></span><textarea name="notes" rows="3"></textarea></label>
             <label class="check"><input type="checkbox" name="consent" required><span>${esc(t('consentFin', { name: C.name }))}</span></label>
           </fieldset>
+          ${honeypot()}
           <p class="form-error" data-form-error hidden></p>
           <div class="step-nav">
             <button class="btn btn--outline" type="button" data-step-back hidden>${esc(t('stepBack'))}</button>
@@ -1050,15 +1058,10 @@
       </div>
       <aside class="fin-aside">
         <h2 class="aside-h">${esc(t('bring'))}</h2>
-        <ul class="plain-list">
-          <li>${esc(t('bring1'))}</li>
-          <li>${esc(t('bring2'))}</li>
-          <li>${esc(t('bring3'))}</li>
-          <li>${esc(t('bring4'))}</li>
-        </ul>
+        ${bringList()}
         <h2 class="aside-h">${esc(t('questions'))}</h2>
         <div class="faq">
-          ${[1, 2, 3, 4].map((i) => `<details><summary>${esc(t(`faq${i}q`))}</summary><p>${esc(t(`faq${i}a`))}</p></details>`).join('')}
+          ${[1, 2, 3].map((i) => `<details><summary>${esc(t(`faq${i}q`))}</summary><p>${esc(t(`faq${i}a`))}</p></details>`).join('')}
         </div>
       </aside>
     </div>
@@ -1106,57 +1109,6 @@
       }
     });
     wireCalcs();
-  }
-
-  /* ---------- Trade-in ---------- */
-  function viewTradeIn() {
-    const opt = t('optional');
-    return `
-    ${pageTop(t('tradeTitle'), t('tradeSub'))}
-    <div class="wrap fin">
-      <div class="fin-main">
-        <form class="panel form-stack" data-lead="trade">
-          <h2 class="form-h">${esc(t('yourVehicle'))}</h2>
-          <div class="field-row field-row--3">
-            <label class="field"><span class="field-label">${esc(t('year'))}</span><input name="year" required inputmode="numeric" maxlength="4" pattern="(19|20)[0-9]{2}"></label>
-            <label class="field"><span class="field-label">${esc(t('make'))}</span><input name="make" required></label>
-            <label class="field"><span class="field-label">${esc(t('model'))}</span><input name="model" required></label>
-          </div>
-          <div class="field-row field-row--3">
-            <label class="field"><span class="field-label">${esc(t('trim'))} <span class="optional">${esc(opt)}</span></span><input name="trim"></label>
-            <label class="field"><span class="field-label">${esc(t('mileage'))}</span><input name="mileage" required inputmode="numeric"></label>
-            <label class="field"><span class="field-label">${esc(t('color'))} <span class="optional">${esc(opt)}</span></span><input name="color"></label>
-          </div>
-          <label class="field"><span class="field-label">${t('vinOpt')}</span><input name="vin" maxlength="17" autocapitalize="characters" spellcheck="false"></label>
-          <fieldset class="field"><legend class="field-label">${esc(t('condition'))}</legend>
-            <div class="choice-grid choice-grid--wide">${choiceCards('condition', [['Excellent', 'No dents, scratches, or mechanical issues'], ['Good', 'Minor wear, and everything works'], ['Fair', 'Some dents or repairs needed'], ['Needs work', 'Major repairs needed or it doesn’t run']])}</div></fieldset>
-          <fieldset class="field"><legend class="field-label">${esc(t('owes'))}</legend>
-            <div class="chips">${chips('owes', ['Yes', 'No'], '', I.opt)}</div></fieldset>
-          <h2 class="form-h">${esc(t('yourContact'))}</h2>
-          <div class="field-row">
-            <label class="field"><span class="field-label">${esc(t('firstName'))}</span><input name="firstName" required autocomplete="given-name"></label>
-            <label class="field"><span class="field-label">${esc(t('lastName'))}</span><input name="lastName" autocomplete="family-name"></label>
-          </div>
-          <div class="field-row">
-            <label class="field"><span class="field-label">${esc(t('phone'))}</span><input name="phone" type="tel" required autocomplete="tel" inputmode="tel"></label>
-            <label class="field"><span class="field-label">${esc(t('email'))} <span class="optional">${esc(opt)}</span></span><input name="email" type="email" autocomplete="email"></label>
-          </div>
-          <p class="form-error" data-form-error hidden></p>
-          <button class="btn btn--primary btn--lg" type="submit">${esc(t('requestOffer'))}</button>
-          <p class="fine">${esc(t('consentTrade', { name: C.name }))}</p>
-        </form>
-      </div>
-      <aside class="fin-aside">
-        <h2 class="aside-h">${esc(t('howItWorks'))}</h2>
-        <ol class="numbered-list">
-          <li><strong>${esc(t('how1'))}</strong> ${esc(t('how1s'))}</li>
-          <li><strong>${esc(t('how2'))}</strong> ${esc(t('how2s'))}</li>
-          <li><strong>${esc(t('how3'))}</strong> ${esc(t('how3s'))}</li>
-        </ol>
-        <h2 class="aside-h">${esc(t('havePhotos'))}</h2>
-        <p class="aside-text">${t('havePhotosText', { phone: `<a class="text-link" href="${smsHref(t('smsTradePhotos'))}">${esc(C.phoneDisplay)}</a>` })}</p>
-      </aside>
-    </div>`;
   }
 
   /* ---------- About ---------- */
@@ -1210,6 +1162,7 @@
                 ${['Call', 'Text', 'Email'].map((m, i) => `<label class="seg-opt"><input type="radio" name="contactBy" value="${m}"${i === 0 ? ' checked' : ''}><span>${esc(I.opt(m))}</span></label>`).join('')}
               </div></fieldset>
             <label class="field"><span class="field-label">${esc(t('message'))}</span><textarea name="message" rows="4" required></textarea></label>
+            ${honeypot()}
             <p class="form-error" data-form-error hidden></p>
             <button class="btn btn--primary btn--lg" type="submit">${esc(t('sendMessage'))}</button>
             <p class="fine">${esc(t('consentContact', { name: C.name }))}</p>
@@ -1265,15 +1218,119 @@
   }
 
   /* ---------- Forms (leads) ---------- */
-  async function sendLead(kind, data) {
-    const payload = { kind, language: I.lang, data, page: location.hash || '#home', submittedAt: new Date().toISOString() };
-    if (!C.leadEndpoint) {
-      console.info('[Preview] Lead not sent because leadEndpoint is not set in config.js:', payload);
+  // Every form is emailed to the dealership through FormSubmit (config.js
+  // leadEndpoint; README, "Form emails"). The email is a table of labeled rows
+  // in English, whichever language the visitor used.
+
+  // Nothing is sent from the chat preview build, from a page opened as a file,
+  // or from a local test server, so testing never emails the dealership by
+  // accident. Add ?send=1 to a local address to send for real.
+  const isLocal = location.protocol === 'file:' || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+  const forceSend = /[?&]send=1(&|$)/.test(location.search);
+  const previewMode = () => !C.leadEndpoint || !!window.ELEVATE_PREVIEW || (isLocal && !forceSend);
+
+  // Hidden from people and screen readers. Bots that fill in every field fill
+  // this too, and those submissions are dropped without sending.
+  const honeypot = () => '<input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">';
+
+  const FORM_NAMES = {
+    prequal: 'Financing application',
+    availability: 'Vehicle question',
+    'test-drive': 'Test drive request',
+    financing: 'Financing question',
+    contact: 'Contact message',
+  };
+  const sentAt = () => `${new Intl.DateTimeFormat('en-US', { timeZone: C.timeZone, dateStyle: 'medium', timeStyle: 'short' }).format(new Date())} (Chicago time)`;
+
+  function leadVehicle(kind, data, form) {
+    if (form.dataset.vehicle) return byId(form.dataset.vehicle) || null;
+    if (kind === 'prequal' && data.vehicle) return state.inventory.find((v) => v.stockNumber === data.vehicle) || null;
+    return null;
+  }
+
+  // The email: FormSubmit settings (underscored) first, then one row per answer.
+  function leadEmail(kind, data, form) {
+    const name = [data.firstName, data.lastName].map((x) => (x || '').trim()).filter(Boolean).join(' ');
+    const v = leadVehicle(kind, data, form);
+    const car = v ? `${v.year} ${v.make} ${v.model}` : '';
+    const subject = {
+      prequal: `Financing application from ${name}${car ? ` (${car})` : ''}`,
+      availability: `${name} asked about the ${car}`,
+      'test-drive': `Test drive request: ${car}, ${data.day} at ${data.time}`,
+      financing: `${name} asked about financing the ${car}`,
+      contact: `Website message from ${name}`,
+    }[kind] || `Website form from ${name}`;
+
+    const mail = {
+      _subject: `${subject}${I.lang === 'es' ? ' (en español)' : ''}`,
+      _template: 'table',
+      _captcha: 'false',
+      _url: location.href,
+    };
+    const row = (label, value) => { if (value !== undefined && value !== null && String(value).trim() !== '') mail[label] = String(value).trim(); };
+    const vehicleLine = v ? `${vehicleRefEn(v)}, ${money(v.price)}` : '';
+
+    row('Form', FORM_NAMES[kind] || kind);
+    row('Name', name);
+    row('Phone', data.phone);
+    // FormSubmit sets Reply-To from a field named "email", so Reply answers the customer.
+    if (data.email) { mail._replyto = data.email.trim(); row('email', data.email); }
+
+    if (kind === 'prequal') {
+      const credit = CREDIT.find(([value]) => value === data.credit);
+      row('ZIP code', data.zip);
+      row('Employment', data.employment);
+      row('Monthly income', data.income);
+      row('Credit', credit && credit[0] !== 'Not sure' ? `${credit[0]} (${credit[1]})` : data.credit);
+      row('Down payment', data.down || 'Not sure yet');
+      row('Vehicle', vehicleLine || 'Not sure yet');
+      if (v) row('VIN', v.vin);
+      row('Notes', data.notes);
+      row('Agreed to be contacted', data.consent ? 'Yes' : '');
+    } else if (kind === 'contact') {
+      row('Best way to reach', data.contactBy);
+      row('Message', data.message);
+    } else {
+      row('Vehicle', vehicleLine);
+      if (v) row('VIN', v.vin);
+      if (kind === 'test-drive') { row('Preferred day', data.day); row('Preferred time', data.time); }
+      row('Message', data.message);
+    }
+    row('Language', I.lang === 'es' ? 'Spanish' : 'English');
+    row('Page', location.href);
+    row('Sent', sentAt());
+    return mail;
+  }
+
+  async function sendLead(kind, data, form) {
+    const mail = leadEmail(kind, data, form);
+    if (previewMode()) {
+      console.info('[Preview] Nothing was sent. On the live site, this email goes to the dealership:', mail);
       await wait(450);
       return { preview: true };
     }
-    const res = await fetch(C.leadEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-    if (!res.ok) throw new Error(`Lead endpoint responded with ${res.status}`);
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 15000);
+    let res;
+    try {
+      res = await fetch(C.leadEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(mail),
+        signal: ctrl.signal,
+      });
+    } finally {
+      clearTimeout(timer);
+    }
+    const reply = await res.json().catch(() => ({}));
+    // Until the inbox owner clicks "Activate Form" in FormSubmit's first email,
+    // it answers success "false" but keeps the submission and sends it after
+    // activation, so the visitor still sees that it went through.
+    const awaitingActivation = /activat/i.test(String(reply.message || ''));
+    if (!res.ok || (String(reply.success) === 'false' && !awaitingActivation)) {
+      throw new Error(`Form service didn't accept the lead (${res.status}): ${reply.message || 'no message'}`);
+    }
+    if (awaitingActivation) console.warn('[Leads] FormSubmit:', reply.message);
     return { preview: false };
   }
 
@@ -1282,7 +1339,6 @@
     const name = data.firstName || '';
     const v = form.dataset.vehicle ? byId(form.dataset.vehicle) : null;
     const vehicle = v ? v.title : t('theVehicle');
-    const car = [data.year, data.make, data.model].filter(Boolean).join(' ') || t('theVehicle');
     const timeLabel = data.time ? (timeSlots().find((s) => s.value === data.time) || { label: data.time }).label : t('yourTime');
     const dayLabel = data.day ? ((upcomingOpenDays().find((d) => d.value === data.day) || { date: data.day }).date) : t('yourDay');
     const map = {
@@ -1291,7 +1347,6 @@
       financing: ['sentFinT', 'sentFinB', { name, vehicle }],
       contact: ['sentContactT', 'sentContactB', { name, method: t(METHOD_KEY[data.contactBy] || 'methodPhone') }],
       prequal: ['sentPrequalT', 'sentPrequalB', { name, phone: data.phone || '' }],
-      trade: ['sentTradeT', 'sentTradeB', { name, car }],
     }[kind] || ['sentDefaultT', 'sentDefaultB', {}];
     return [t(map[0]), t(map[1], map[2])];
   }
@@ -1307,10 +1362,8 @@
     }
     const kind = form.dataset.lead;
     const data = Object.fromEntries(new FormData(form).entries());
-    if (form.dataset.vehicle) {
-      const v = byId(form.dataset.vehicle);
-      if (v) { data.vehicle = vehicleRefEn(v); data.vin = v.vin; }
-    }
+    const trapped = !!data._honey;
+    delete data._honey;
     const submit = $('[type="submit"]:not([hidden])', form);
     const err = $('[data-form-error]', form);
     const label = submit.textContent;
@@ -1318,13 +1371,13 @@
     submit.textContent = t('sending');
     if (err) err.hidden = true;
     try {
-      const result = await sendLead(kind, data);
+      const result = trapped ? { preview: false } : await sendLead(kind, data, form);
       const [title, body] = doneMessage(kind, data, form);
       form.innerHTML = `<div class="form-done" role="status" tabindex="-1">
         <span class="done-icon">${icon('check')}</span>
         <h2 class="form-h">${esc(title)}</h2>
         <p>${esc(body)}</p>
-        ${result.preview ? `<p class="preview-note">${esc(t('previewNote'))}</p>` : ''}
+        ${result.preview ? `<p class="preview-note">${esc(t('previewNote', { email: C.email }))}</p>` : ''}
         <a class="btn btn--outline" href="#inventory">${esc(t('browse'))}</a>
       </div>`;
       form.classList.add('is-done');
@@ -1342,7 +1395,6 @@
     home: { title: () => '', render: viewHome, after: afterHome },
     inventory: { title: () => t('invTitle'), render: viewInventory, after: afterInventory },
     financing: { title: () => t('finTitle'), render: viewFinancing, after: afterFinancing },
-    'trade-in': { title: () => t('tradeTitle'), render: viewTradeIn },
     about: { title: () => t('aboutTitle'), render: viewAbout },
     contact: { title: () => t('contactTitle'), render: viewContact },
     saved: { title: () => t('savedTitle'), render: viewSaved },

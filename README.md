@@ -11,13 +11,16 @@ build step required to run it.
 - **While editing:** from this folder run `python3 -m http.server 8000` and open
   http://localhost:8000. A server is needed because browsers block
   `fetch('data/inventory.json')` from `file://` pages.
-- **Rebuild the single file** after edits: `python3 build.py`.
+- **Rebuild the single file** after edits: `python3 build.py`. Its forms send
+  real emails once it's online. `python3 build.py --preview` makes
+  `dist/elevate-auto-sales-preview.html`, a copy whose forms never send, for
+  sharing a look at the site (the chat preview link uses this one).
 
 ## Where things live
 
 | File | What it does |
 | --- | --- |
-| `js/config.js` | Name, phone, email, address, hours, and where form leads go. Edit dealership details here only. |
+| `js/config.js` | Name, phone, email, address, hours, tagline, and where form emails go. Edit dealership details here only. |
 | `js/inventory-source.js` | The only file that knows where vehicles come from. Swap the data source here. |
 | `data/inventory.json` | 20 sample vehicles, shaped like a typical dealer inventory feed. |
 | `js/app.js` | Pages (hash routes), filters, vehicle pages, forms, calculator, saved vehicles. |
@@ -27,7 +30,8 @@ build step required to run it.
 | `build.py` | Bundles everything into `dist/elevate-auto-sales.html`. |
 
 Routes: `#home`, `#inventory`, `#v-<stock number>`, `#financing`,
-`#trade-in`, `#about`, `#contact`, `#saved`.
+`#about`, `#contact`, `#saved`. (There's no trade-in page: the dealership
+doesn't take trade-ins. Old `#trade-in` links land on the home page.)
 
 ## Header and search
 
@@ -61,7 +65,7 @@ language. So a Spanish-language phone gets Spanish automatically.
 - **Leads** include `language: "es"` when sent from the Spanish site, so you know
   to reply in Spanish. Dropdown answers are sent in English so records stay
   consistent.
-- The tagline "Drive higher, drive better." stays in English as a brand line.
+- The tagline "Drive Higher. Drive Better." stays in English as a brand line.
 
 ## Connecting the real inventory system
 
@@ -130,13 +134,102 @@ The video plays muted on a loop, has a Pause button, pauses when scrolled out
 of view, and doesn't autoplay for visitors with reduced motion or data saver
 turned on. If the file can't be loaded, the placeholder comes back.
 
-## Sending form leads somewhere
+## Form emails
 
-Forms run in preview mode while `leadEndpoint` in `js/config.js` is `null`: they
-show a confirmation, log the lead to the browser console, and send nothing.
-Set it to a form service URL or the CRM's endpoint to go live. Many dealer
-CRMs take leads by email in ADF/XML format; a small serverless function can
-translate the JSON this site posts.
+Every form (financing application, vehicle questions, test drives, contact)
+is emailed to elevatellc47@gmail.com through [FormSubmit](https://formsubmit.co),
+a free form-to-email service that needs no account. The address is in
+`leadEndpoint` in `js/config.js`.
+
+- **Activate it once.** The first form sent from the live site makes
+  FormSubmit email an **Activate Form** button to that inbox. Click it.
+  FormSubmit holds anything sent before activation (for 30 days) and delivers
+  it afterward, and visitors see a normal confirmation either way. Check the
+  spam folder the first time and mark the email "Not spam". Changing the
+  address means activating again.
+- **What arrives:** a table with one row per answer, in English even when the
+  visitor used Spanish. Financing applications include name, phone, email,
+  ZIP code, employment, monthly income, credit range, down payment, the
+  vehicle with stock number, price, and VIN, notes, and contact consent. Every
+  email also lists the language, the page, and the time sent (Chicago time).
+  Subjects say what it is, like "Financing application from Jane Doe (2015
+  Chevrolet Tahoe)", and Spanish ones end in "(en español)". Reply goes
+  straight to the customer when they gave an email.
+- **When nothing sends:** in the `--preview` build, in a file opened from the
+  computer, and on a local test server (`localhost`), so testing never emails
+  the dealership by accident. Those show "This is a preview, so nothing was
+  sent" and log the email that would have gone out in the browser console.
+  To send for real from a local server, add `?send=1` to the address, for
+  example `http://localhost:8000/?send=1#financing`.
+- **Spam:** each form has a hidden field that only bots fill in; those
+  submissions are dropped.
+- **If sending fails,** the form stays filled in and shows the phone number.
+- **Hide the address (optional):** after activation FormSubmit sends a random
+  string that can replace the email address in `leadEndpoint`.
+- **Later:** to send leads to a CRM instead, change `leadEndpoint` and
+  `leadEmail()` in `js/app.js`. Many dealer CRMs take leads by email in
+  ADF/XML format.
+
+The financing form is a pre-qualification: it never asks for a Social
+Security number or birth date, which shouldn't travel by email. Full credit
+applications belong on the lender's or DMS's secure application.
+
+## Adding a car
+
+Add an entry to the `vehicles` list in `data/inventory.json` (or let the
+inventory feed supply it), then redeploy. Copy this and change the values:
+
+```json
+{
+  "stockNumber": "EA1021",
+  "vin": "1HGCV1F30KA012345",
+  "year": 2019,
+  "make": "Honda",
+  "model": "Accord",
+  "trim": "Sport 1.5T",
+  "bodyType": "Sedan",
+  "price": 18995,
+  "mileage": 64210,
+  "exteriorColor": "Platinum White Pearl",
+  "interiorColor": "Black cloth",
+  "transmission": "CVT",
+  "drivetrain": "FWD",
+  "engine": "1.5L Turbo I4",
+  "fuelType": "Gasoline",
+  "mpgCity": 30,
+  "mpgHighway": 38,
+  "features": ["Apple CarPlay", "Backup camera", "Heated front seats"],
+  "photos": ["assets/cars/EA1021-1.jpg", "assets/cars/EA1021-2.jpg"],
+  "dateInStock": "2026-11-20",
+  "status": "available",
+  "badge": "Just arrived"
+}
+```
+
+- `stockNumber` must be unique; it becomes the page address (`#v-ea1021`).
+- `bodyType`: Sedan, SUV, Truck, Minivan, or Coupe. `drivetrain`: FWD, AWD,
+  4WD, or RWD. `transmission`: Automatic, Manual, or CVT. `fuelType`:
+  Gasoline, Hybrid, Electric, or Diesel. Other values show as written and
+  don't get Spanish translations.
+- `status`: `available`, `pending` (shows "Sale pending"), or `sold` (hidden
+  from the site). `badge` is optional.
+- Photos: save them in `assets/cars/` and deploy the whole folder (the
+  single-file build doesn't carry vehicle photos). See "Adding vehicle
+  photos" below.
+
+## Launch test
+
+Once the site is online:
+
+1. Add one real car (see "Adding a car") and redeploy.
+2. Open its page on a phone and check the price, details, and photos.
+3. Send a financing application from the Financing page, picking that car.
+4. In elevatellc47@gmail.com (spam folder too), click **Activate Form** in
+   FormSubmit's email. The application arrives right after.
+5. Check every answer came through, and hit Reply to confirm it goes to the
+   address typed in the form.
+6. Send one more form (a test drive or contact message) to confirm emails
+   arrive without any extra step.
 
 ## Deploying
 
@@ -152,6 +245,10 @@ GitHub Pages. Point the dealership's domain at it.
 - [ ] **About page:** the story is placeholder text. The owner's name is set in `js/config.js` (`owner`).
 - [ ] **Claims to confirm with the owner:** "a price on every car," "history
       reports on request," financing wording, and response-time language.
+- [ ] **Form emails:** activate FormSubmit (see "Form emails") and run the launch test.
+- [ ] **Sample listings:** remove the 20 sample vehicles before the site is
+      public, and the two "sample listings" notes in `js/i18n.js` (`invSub`
+      and `legal`, in English and Spanish).
 - [ ] **Consent text** on forms (phone/text/email contact) should be reviewed.
 - [ ] **Credit applications:** this site never asks for an SSN or birth date.
       For full applications, link to the lender's or DMS's secure application
