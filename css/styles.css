@@ -894,7 +894,6 @@ button.thumb { cursor: pointer; }
 .owner { display: grid; gap: 10px; max-width: 320px; }
 .owner figcaption { display: grid; }
 .owner-name { font-size: 1.125rem; }
-.owner-role { color: var(--muted); }
 @media (min-width: 860px) { .about-grid { grid-template-columns: minmax(0, 1fr) 300px; gap: 64px; align-items: start; } }
 
 /* ---------- Contact ---------- */

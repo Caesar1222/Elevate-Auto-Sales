@@ -906,7 +906,6 @@ button.thumb { cursor: pointer; }
 .owner { display: grid; gap: 10px; max-width: 320px; }
 .owner figcaption { display: grid; }
 .owner-name { font-size: 1.125rem; }
-.owner-role { color: var(--muted); }
 @media (min-width: 860px) { .about-grid { grid-template-columns: minmax(0, 1fr) 300px; gap: 64px; align-items: start; } }
 
 /* ---------- Contact ---------- */
@@ -1477,7 +1476,6 @@ window.ELEVATE_CONFIG = {
       aboutP3: 'Stop by {days}, or call us at {phone}.',
       ownerPhoto: 'Owner photo',
       ownerName: 'Owner name',
-      ownerRole: 'Owner',
       callN: 'Call {phone}',
       openMaps: 'Open in Google Maps',
 
@@ -1800,7 +1798,6 @@ window.ELEVATE_CONFIG = {
       aboutP3: 'Visítenos {days} o llámenos al {phone}.',
       ownerPhoto: 'Foto del dueño',
       ownerName: 'Nombre del dueño',
-      ownerRole: 'Dueño',
       callN: 'Llamar al {phone}',
       openMaps: 'Abrir en Google Maps',
 
@@ -3046,7 +3043,7 @@ window.ELEVATE_CONFIG = {
         </div>
         <figure class="owner">
           ${Brand.photoPlaceholder({ label: esc(t('ownerPhoto')), size: 'portrait' })}
-          <figcaption><strong class="owner-name">${esc(C.owner || t('ownerName'))}</strong><span class="owner-role">${esc(t('ownerRole'))}</span></figcaption>
+          <figcaption><strong class="owner-name">${esc(C.owner || t('ownerName'))}</strong></figcaption>
         </figure>
       </div>
     </section>

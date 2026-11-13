@@ -231,7 +231,6 @@
       aboutP3: 'Stop by {days}, or call us at {phone}.',
       ownerPhoto: 'Owner photo',
       ownerName: 'Owner name',
-      ownerRole: 'Owner',
       callN: 'Call {phone}',
       openMaps: 'Open in Google Maps',
 
@@ -554,7 +553,6 @@
       aboutP3: 'Visítenos {days} o llámenos al {phone}.',
       ownerPhoto: 'Foto del dueño',
       ownerName: 'Nombre del dueño',
-      ownerRole: 'Dueño',
       callN: 'Llamar al {phone}',
       openMaps: 'Abrir en Google Maps',
 
