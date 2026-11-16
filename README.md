@@ -2,7 +2,7 @@
 
 A bilingual website and phone-first inventory manager for an independent used-car dealership in Chicago.
 
-**[Live site](https://YOUR-USERNAME.github.io/YOUR-REPO/)** · [Architecture](#architecture) · [Engineering highlights](#engineering-highlights) · [Running locally](#running-locally)
+**[Live site](https://caesar1222.github.io/Elevate-Auto-Sales/)** · [Architecture](#architecture) · [Engineering highlights](#engineering-highlights) · [Running locally](#running-locally)
 
 <p align="center">
   <img src="docs/screenshots/home.png" alt="Elevate Auto Sales home page in a desktop browser" width="68%">
