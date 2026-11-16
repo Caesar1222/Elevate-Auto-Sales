@@ -1,289 +1,173 @@
-# Elevate Auto Sales website
+# Elevate Auto Sales
 
-The dealership's website. It's plain HTML, CSS, and JavaScript: no framework,
-no dependencies, no build step required to run it. Cars are added, edited, and
-removed on the manager page (`/manager/`) and stored in Supabase; see
-"Manager page" below.
+A bilingual website and phone-first inventory manager for an independent used-car dealership in Chicago.
 
-## Run it
+**[Live site](https://YOUR-USERNAME.github.io/YOUR-REPO/)** · [Architecture](#architecture) · [Engineering highlights](#engineering-highlights) · [Running locally](#running-locally)
 
-- **Quickest:** open `dist/elevate-auto-sales.html` in a browser. It's a
-  single self-contained file (fonts load from Google Fonts when online).
-- **While editing:** from this folder run `python3 -m http.server 8000` and open
-  http://localhost:8000. A server is needed because browsers block
-  `fetch('data/inventory.json')` from `file://` pages.
-- **Rebuild the single file** after edits: `python3 build.py`. Its forms send
-  real emails once it's online. `python3 build.py --preview` makes
-  `dist/elevate-auto-sales-preview.html`, a copy whose forms never send, for
-  sharing a look at the site (the chat preview link uses this one).
+<p align="center">
+  <img src="docs/screenshots/home.png" alt="Elevate Auto Sales home page in a desktop browser" width="68%">
+  &nbsp;
+  <img src="docs/screenshots/manager.png" alt="The manager page on a phone, adding a car by VIN" width="24%">
+</p>
 
-## Where things live
+## Overview
 
-| File | What it does |
-| --- | --- |
-| `js/config.js` | Name, phone, email, address, hours, tagline, and where form emails go. Edit dealership details here only. |
-| `js/inventory-source.js` | The only file that knows where vehicles come from. Swap the data source here. |
-| `data/inventory.json` | Fallback car list (empty), used only until the manager database is connected. |
-| `manager/` | The manager page: sign in, add and edit cars, upload photos, mark cars sold. |
-| `supabase/setup.sql` | One-time database setup for the manager page (tables, rules, photo storage). |
-| `.github/workflows/keep-alive.yml` | Reads the car list every few days so the free database never pauses. |
-| `js/app.js` | Pages (hash routes), filters, vehicle pages, forms, calculator, saved vehicles. |
-| `js/brand.js` | The logo and the grey photo and map placeholders. |
-| `js/i18n.js` | Every visible string in English and Spanish, plus translations for vehicle features. |
-| `css/styles.css` | All styles, with light and dark themes. |
-| `build.py` | Bundles everything into `dist/elevate-auto-sales.html`. |
+Elevate Auto Sales is a newly licensed independent dealership that decided to run without a dealer management system (DMS), the software many lots use to track inventory and publish it to their website. The owner needed three things: a site where shoppers can browse cars in English or Spanish, an easy path from browsing to a phone call or a financing request, and a way to list cars himself from his phone without learning new software.
 
-Routes: `#home`, `#inventory`, `#v-<stock number>`, `#financing`,
-`#about`, `#contact`, `#saved`. (There's no trade-in page: the dealership
-doesn't take trade-ins. Old `#trade-in` links land on the home page.)
+This repository is that site. The public pages are plain HTML, CSS, and JavaScript hosted on GitHub Pages. Inventory, photos, and the owner's login live in Supabase, and the owner manages listings from a mobile admin page at `/manager/`. There's no server to maintain and nothing to rebuild when a car is added, and hosting, the database, and lead emails all run on free tiers.
 
-## Header and search
+## Features
 
-On desktop, the black top bar (address, hours, language switch, phone) and the
-header stay pinned together as visitors scroll. On phones the header stays
-pinned and the bottom bar handles call, text, and directions. If you change the
-header or top bar height, update `--sticky-h` in `css/styles.css` so the sticky
-filters and price box sit below it.
+**For shoppers**
 
-The magnifying glass opens a search that matches year, make, model, trim, and
-stock number in any order ("2017 honda", "ford truck"). It ignores accents and
-punctuation, so "f150" finds an F-150 and "crv" finds a CR-V, and Spanish words
-like "camioneta" or "troca" find trucks. Results update as you type; Enter shows
-every match on the inventory page. Press "/" anywhere on desktop to open it.
-Search words for body styles live in `BODY_WORDS` in `js/app.js`.
+- Inventory with filters and sorting, plus a header search that matches words in any order and ignores punctuation and accents ("f150", "crv", "honda 2017"). On desktop, `/` opens it and the arrow keys move through results.
+- Vehicle pages with a photo gallery, specs, and features, and quick requests for availability, a test drive, or financing.
+- A monthly payment calculator and a saved-vehicles list.
+- Financing pre-qualification, test drive, vehicle question, and contact forms, delivered to the dealership's inbox.
+- Full English and Spanish versions, picked from the browser's language and remembered between visits.
+- Light and dark themes, and a phone layout with a bottom bar for call, text, and directions.
 
-## English and Spanish
+**For the owner, at `/manager/`**
 
-The **English | Español** switch sits in the top bar on desktop and as
-**EN | ES** in the header on phones. The site picks the language in this order:
-a `?lang=es` or `?lang=en` link, the visitor's last choice, then their browser
-language. So a Spanish-language phone gets Spanish automatically.
+- Email and password sign-in, with password reset by email.
+- Add a car by typing its VIN: year, make, model, trim, body style, drivetrain, transmission, engine, and fuel type fill in from NHTSA's VIN decoder.
+- Add photos from the camera or photo library, choose the main photo, and remove any.
+- Mark a car sold to take it off the site (it moves to a Sold tab and can go back on sale), or delete it and its photos for good.
+- Changes show up on the site right away, with no rebuild or redeploy.
 
-- **Editing text:** every string lives in `js/i18n.js`, in an English block and a
-  matching Spanish block. Change wording there, never in `app.js`.
-- **New vehicle features:** features from the inventory feed show in English
-  until their translation is added to the `feature` list in the Spanish block.
-  Trims and colors stay as the feed provides them.
-- **Spanish ads and posts:** link to `yourdomain.com/?lang=es` so visitors land in
-  Spanish.
-- **Leads** include `language: "es"` when sent from the Spanish site, so you know
-  to reply in Spanish. Dropdown answers are sent in English so records stay
-  consistent.
-- The tagline "Drive Higher. Drive Better." stays in English as a brand line.
+## Architecture
 
-## Manager page
+```mermaid
+flowchart LR
+    subgraph pages["GitHub Pages: static hosting"]
+        site["Public site<br/>vanilla JS, English and Spanish"]
+        mgr["Manager page<br/>/manager/"]
+    end
 
-The dealership adds, edits, and removes cars at **/manager/** on the website
-(for example `https://your-site/manager/`). It's built for a phone:
+    subgraph supabase["Supabase"]
+        auth["Auth"]
+        db[("Postgres<br/>row-level security")]
+        store[("Storage<br/>vehicle photos")]
+    end
 
-1. Sign in with email and password.
-2. Tap **Add a car** and type the VIN. Year, make, model, trim, body style,
-   drivetrain, engine, and fuel fill in from NHTSA's free VIN decoder.
-3. Add the price, mileage, colors, and photos (camera or photo library), then
-   tap **Save and publish**. The car is on the site right away.
-4. **Mark sold** takes a car off the site and keeps it under "Sold" (it can go
-   back on sale). **Delete**, inside Edit, removes the car and its photos for good.
+    shopper(["Shopper"]) --> site
+    owner(["Owner, on a phone"]) --> mgr
 
-Photos are shrunk on the phone before uploading (1600px, plus a small copy for
-lists), and the first photo is the main one. The stock number defaults to the
-last 6 characters of the VIN and becomes the car's web address (`#v-...`).
+    site -->|listings not marked sold| db
+    site -->|photos| store
+    site -->|lead forms| formsubmit["FormSubmit"]
+    formsubmit -->|email| inbox["Dealership inbox"]
 
-Cars, photos, and logins live in [Supabase](https://supabase.com) on the free
-plan. Until the setup below is done, the site reads `data/inventory.json`
-(empty) and shows a "New cars arriving soon" message where cars would be.
+    mgr -->|sign in| auth
+    mgr -->|add, edit, sell, delete| db
+    mgr -->|resized photos| store
+    mgr -->|decode VIN| vpic["NHTSA vPIC API"]
 
-### One-time setup (about 15 minutes)
-
-1. Create a free account at supabase.com and a **new project** (name it
-   anything; pick a region near Chicago, like East US). Save the database
-   password somewhere safe; the website doesn't need it.
-2. **SQL Editor > New query:** paste all of `supabase/setup.sql` and click
-   **Run**. This creates the cars table, the photo storage, and the rules that
-   let only managers make changes.
-3. **Authentication > Sign In / Providers:** turn off **Allow new users to sign
-   up**, so nobody can create their own login.
-4. **Authentication > Users > Add user > Create new user:** enter Axel's email
-   and a temporary password, and check **Auto Confirm User**. Then make him a
-   manager by running this in the SQL editor with his email:
-   ```sql
-   insert into public.admins (user_id)
-   select id from auth.users where email = 'his.email@example.com';
-   ```
-   Do the same for your own login if you want one.
-5. **Authentication > URL Configuration:** set **Site URL** to the website's
-   address and add `https://your-site/manager/` under **Redirect URLs**, so
-   "Forgot your password?" emails lead back to the manager page.
-6. **Project Settings > API Keys:** copy the **Project URL** and the
-   **publishable** key into `supabaseUrl` and `supabaseKey` in `js/config.js`.
-   Never put the secret key there.
-7. Commit and push, open `/manager/`, sign in, and add a test car.
-
-Then send Axel the address, his email, and the temporary password. He can pick
-his own any time with "Forgot your password?". On his phone, **Add to Home
-Screen** from the browser's share menu makes it one tap away.
-
-### Good to know
-
-- **Free plan pausing:** Supabase pauses free projects after about a week with
-  little database activity, which takes the cars off the site until someone
-  clicks **Resume** in the Supabase dashboard (it emails a warning first, and
-  nothing is lost). Shoppers browsing count as activity, and
-  `.github/workflows/keep-alive.yml` reads the car list every 3 days as a
-  backup. GitHub turns off scheduled workflows in public repositories after 60
-  days with no commits; it emails first, and one click on the **Actions** tab
-  turns it back on. The $25/month paid plan never pauses and adds daily backups.
-- **Space:** the free plan's 1 GB of photo storage holds roughly 2,000 photos.
-  Deleting sold cars frees space.
-- **If the database can't be reached,** the rest of the site keeps working and
-  the inventory spots show the phone number instead of cars.
-- **Security:** the publishable key in `js/config.js` is meant to be public.
-  The rules in `supabase/setup.sql` let shoppers read cars that aren't sold and
-  let only logins in the `admins` table add, change, or delete cars and photos.
-- `js/config.js` and the keep-alive workflow assume this folder is the top
-  level of the repository.
-- **Switching systems later:** `js/inventory-source.js` is the only file that
-  knows where cars come from. Point `load()` at another feed and map its fields
-  in `normalize()`.
-
-## Adding vehicle photos
-
-Every listing shows grey "Photo coming soon" boxes until it has photos. Add
-them on the manager page (see above). The first photo becomes the main image on
-cards and the vehicle page, and up to 12 appear in the vehicle page gallery.
-Landscape photos work best: stand back far enough to fit the whole car.
-
-## Hero photo (placeholder until the video)
-
-The hero currently shows a free Unsplash photo by Erik Mclean
-(https://unsplash.com/photos/4N_iP-NmaQg), saved at `assets/hero-photo.jpg`
-(resized to 2000px wide). The Unsplash License allows free commercial use, and
-credit isn't required.
-
-- **To swap it:** replace `assets/hero-photo.jpg` with another landscape photo
-  about 2000px wide (200–400 KB). `build.py` embeds local photos in the
-  single-file version automatically.
-- **Cropping:** `heroImage.position` picks which part stays visible when the
-  photo is cropped, for example `'right center'` to keep a car on the right.
-- If the photo can't load, the grey placeholder shows instead. Once a hero
-  video is added, the video takes over and the photo becomes its still frame.
-
-## Adding a hero video
-
-The home page opens with a full-width video behind the headline. Until a clip
-is added it shows a dark grey placeholder.
-
-1. **Prepare the clip:** 10 to 20 seconds that loops cleanly, landscape 16:9
-   (1920×1080 or 1280×720), H.264 MP4 with no audio, ideally under 8 MB. Keep
-   the important part of the shot near the center, since phones crop the sides,
-   and favor darker footage so the white headline stays readable.
-2. **Save it** as `assets/hero.mp4`, plus a still frame as
-   `assets/hero-poster.jpg`. The still shows while the video loads and for
-   visitors who have reduced motion or data saver turned on.
-3. **Turn it on** in `js/config.js`:
-
-   ```js
-   heroVideo: {
-     sources: [{ src: 'assets/hero.mp4', type: 'video/mp4' }],
-     poster: 'assets/hero-poster.jpg',
-   },
-   ```
-
-With ffmpeg, from a phone video (trims to 15 seconds, drops audio, compresses):
-
-```
-ffmpeg -i input.mov -t 15 -vf "scale=1920:-2" -an -c:v libx264 -crf 26 -preset slow -movflags +faststart assets/hero.mp4
-ffmpeg -i assets/hero.mp4 -frames:v 1 -q:v 3 assets/hero-poster.jpg
+    cron["GitHub Actions<br/>every 3 days"] -->|keep-alive read| db
 ```
 
-The video plays muted on a loop, has a Pause button, pauses when scrolled out
-of view, and doesn't autoplay for visitors with reduced motion or data saver
-turned on. If the file can't be loaded, the placeholder comes back.
+Both pages run in the browser and talk to Supabase directly. The public site reads listings from Supabase's REST API with `fetch` and the project's publishable key, which is designed to be public; what any visitor can read or write is decided by Postgres row-level security, not by the front end. The manager page uses `supabase-js` for sign-in, writes, and photo uploads. Lead forms go to FormSubmit, which emails each submission to the dealership, so the project has no server of its own.
 
-## Form emails
+## Tech stack
 
-Every form (financing application, vehicle questions, test drives, contact)
-is emailed to elevatellc47@gmail.com through [FormSubmit](https://formsubmit.co),
-a free form-to-email service that needs no account. The address is in
-`leadEndpoint` in `js/config.js`.
+| Area | Choice | Why |
+| --- | --- | --- |
+| Front end | HTML, CSS, vanilla JavaScript | No framework or build step, and no JavaScript dependencies on the public site |
+| Hosting | GitHub Pages | Free, and deploys on every push |
+| Data, auth, photos | Supabase: Postgres, Auth, Storage | Free tier, with row-level security enforcing permissions |
+| VIN decoding | NHTSA vPIC API | Free public data from the U.S. Department of Transportation |
+| Lead delivery | FormSubmit | Form-to-email with no backend |
+| Automation | GitHub Actions | Scheduled job that keeps the free database from pausing |
+| Tooling | Python (`build.py`) | Bundles the site into one HTML file for preview links |
 
-- **Activate it once.** The first form sent from the live site makes
-  FormSubmit email an **Activate Form** button to that inbox. Click it.
-  FormSubmit holds anything sent before activation (for 30 days) and delivers
-  it afterward, and visitors see a normal confirmation either way. Check the
-  spam folder the first time and mark the email "Not spam". Changing the
-  address means activating again.
-- **What arrives:** a table with one row per answer, in English even when the
-  visitor used Spanish. Financing applications include name, phone, email,
-  ZIP code, employment, monthly income, credit range, down payment, the
-  vehicle with stock number, price, and VIN, notes, and contact consent. Every
-  email also lists the language, the page, and the time sent (Chicago time).
-  Subjects say what it is, like "Financing application from Jane Doe (2015
-  Chevrolet Tahoe)", and Spanish ones end in "(en español)". Reply goes
-  straight to the customer when they gave an email.
-- **When nothing sends:** in the `--preview` build, in a file opened from the
-  computer, and on a local test server (`localhost`), so testing never emails
-  the dealership by accident. Those show "This is a preview, so nothing was
-  sent" and log the email that would have gone out in the browser console.
-  To send for real from a local server, add `?send=1` to the address, for
-  example `http://localhost:8000/?send=1#financing`.
-- **Spam:** each form has a hidden field that only bots fill in; those
-  submissions are dropped.
-- **If sending fails,** the form stays filled in and shows the phone number.
-- **Hide the address (optional):** after activation FormSubmit sends a random
-  string that can replace the email address in `leadEndpoint`.
-- **Later:** to send leads to a CRM instead, change `leadEndpoint` and
-  `leadEmail()` in `js/app.js`. Many dealer CRMs take leads by email in
-  ADF/XML format.
+## Engineering highlights
 
-The financing form is a pre-qualification: it never asks for a Social
-Security number or birth date, which shouldn't travel by email. Full credit
-applications belong on the lender's or DMS's secure application.
+### No framework, on purpose
 
-## Launch test
+A small dealership's site doesn't need a framework, and a client without a developer on staff shouldn't inherit dependencies that need patching. The public site is plain files that any static host can serve, with no JavaScript dependencies and no build step. `js/app.js` renders each page from template literals behind a hash router (`#inventory`, `#v-<stock number>`, `#financing`, and so on). `build.py` only bundles everything into one self-contained HTML file, which made it easy to send the owner preview links during design rounds. The trade-off is search visibility: vehicle pages are hash routes rather than separate URLs, so pre-rendering a page per vehicle is first on the roadmap.
 
-Once the site is online:
+### One file owns the data source
 
-1. Add one real car on the manager page.
-2. Open its page on a phone and check the price, details, and photos.
-3. Send a financing application from the Financing page, picking that car.
-4. In elevatellc47@gmail.com (spam folder too), click **Activate Form** in
-   FormSubmit's email. The application arrives right after.
-5. Check every answer came through, and hit Reply to confirm it goes to the
-   address typed in the form.
-6. Send one more form (a test drive or contact message) to confirm emails
-   arrive without any extra step.
+`js/inventory-source.js` is the only code that knows where vehicles come from. `load()` fetches records, and `normalize()` maps them into the single vehicle shape the rest of the site renders, whether they come from a JSON file, a DMS-style export (it accepts a `photos` array or pipe-separated `PhotoURLs`), or Supabase's snake_case rows. The site was first planned around a DealerCenter inventory feed. When the owner decided to list cars himself instead, the public site's move to Supabase came down to this file and two settings in `js/config.js`.
 
-## Deploying
+### Permissions live in the database
 
-Any static host works: Netlify or Cloudflare Pages (drag the folder in) or
-GitHub Pages. Point the dealership's domain at it.
+The publishable key in `js/config.js` ships to every browser, so nothing in the front end is trusted. `supabase/setup.sql` turns on row-level security: anyone can read vehicles that aren't sold (admins see all of them), while inserts, updates, and deletes require the signed-in user to be in an `admins` table, checked by a `security definer` function, `is_admin()`. That table has row-level security on, no policies, and all grants revoked, so the API can't read or change it, and a login that isn't on it can't change anything. Storage policies apply the same rule to photos, the bucket accepts only JPEG, PNG, and WebP files up to 5 MB, and check constraints (VIN length, year range, price and mileage bounds, stock-number format) reject bad data even if someone goes around the UI.
 
-## Before launch: placeholders and things to confirm
+### Photos are resized on the phone
 
-- [ ] **Logo:** the header logo is a vector recreation. Swap in the original
-      files from whoever designed the banner (`logo()` and `emblem()` in `js/brand.js`).
-- [ ] **Manager page:** finish the one-time setup in "Manager page" and add the first cars.
-- [ ] **Hero:** swap the stock placeholder photo for the dealership's own video or photo of the lot.
-- [ ] **About page:** the story is placeholder text.
-- [ ] **Claims to confirm with the owner:** "a price on every car," "history
-      reports on request," financing wording, and response-time language.
-- [ ] **Form emails:** activate FormSubmit (see "Form emails") and run the launch test.
-- [ ] **Consent text** on forms (phone/text/email contact) should be reviewed.
-- [ ] **Credit applications:** this site never asks for an SSN or birth date.
-      For full applications, link to the lender's or DMS's secure application
-      rather than collecting that data here.
-- [ ] **Advertising rules:** the calculator is an estimate tool with a
-      disclaimer. Avoid showing monthly payments on listings without the
-      required financing disclosures, and confirm the fee disclaimer wording
-      meets Illinois requirements.
-- [ ] **Map:** replace the grey map box with a Google Maps embed once the
-      Google Business Profile is live, and add a review link.
-- [ ] **Privacy policy page** (the forms collect personal information).
-- [ ] **Spanish:** have a native speaker read through `js/i18n.js` (and decide whether to translate the tagline).
+Phone photos are far larger than a web page needs. Before uploading, the manager page draws each photo onto a canvas and encodes two JPEGs: 1600 px on the long side for the vehicle page, and 640 px for cards and gallery thumbnails. Pages stay fast on mobile data, and the free tier's 1 GB of storage holds roughly 2,000 photos. Files are uploaded with a one-year cache header. If a save fails, the files uploaded during that attempt are deleted, and photos the owner removes are only deleted from storage after the save succeeds, which keeps the bucket and the database consistent.
 
-## Suggested next step
+### Data entry built around the VIN
 
-Later, consider moving to Astro so each vehicle gets its own
-pre-rendered page that search engines index well, with separate `/es/` pages so
-Spanish searches find the site too. The CSS and most of the
-markup carry over directly.
+When the VIN field reaches 17 characters, the manager page looks it up in NHTSA's vPIC decoder and maps the response onto the site's own options: body class becomes a body style, drive type becomes FWD, AWD, 4WD, or RWD, and displacement, cylinders, and turbo become an engine label like "1.5L I4 Turbo". The field uppercases as you type, warns about I, O, and Q (letters VINs never use), and fills in a unique stock number from the last six characters. Price and mileage format themselves, missing fields are flagged and focused, database errors (a duplicate stock number, a permission denial, a dropped connection) turn into plain-English messages, and leaving with unsaved changes asks first.
+
+### Fails soft, and stays up on free tiers
+
+The inventory request times out after 12 seconds. If Supabase can't be reached, the inventory sections show the phone number and a pre-qualification button while the rest of the site keeps working, and an empty lot shows "New cars arriving soon" instead of a blank grid. Forms keep the visitor's answers and show the phone number if sending fails. Supabase pauses free projects after about a week with little activity, which would take the inventory offline, so a scheduled GitHub Actions workflow reads one row every three days. It uses the same public config file as the site, so there are no secrets to manage.
+
+### Leads without a backend or sensitive data
+
+Forms post to FormSubmit's AJAX endpoint, which emails the dealership a table of answers along with the page, language, and time sent. A hidden honeypot field filters out bots, and the site won't send from `localhost`, a file opened from disk, or the preview build, so testing can't email the dealership by accident. The financing form is deliberately a pre-qualification: it never asks for a Social Security number or birth date, which shouldn't travel by email.
+
+### Bilingual throughout
+
+Every string on the public site, including vehicle features, badges, business hours, and form labels, comes from `js/i18n.js` in English and Spanish. Search understands Spanish words like "camioneta" and "troca", and each lead is tagged with the language it was sent in. Emails arrive in English for the dealership, with "(en español)" added to the subject.
+
+## Project structure
+
+```
+.
+├── index.html                          Public site
+├── css/styles.css                      Design tokens, layout, light and dark themes
+├── js/
+│   ├── config.js                       Business details, Supabase URL and key, lead endpoint
+│   ├── inventory-source.js             The only code that knows where vehicles come from
+│   ├── app.js                          Router, pages, search, filters, forms, payment calculator
+│   ├── i18n.js                         English and Spanish text
+│   └── brand.js                        Logo and photo placeholders
+├── manager/                            Owner's admin page
+│   ├── index.html
+│   ├── manager.js                      Sign-in, VIN decoding, photo processing, listing changes
+│   └── manager.css
+├── supabase/setup.sql                  Tables, constraints, row-level security, photo storage
+├── data/inventory.json                 Fallback listings when no database is configured
+├── assets/                             Favicon and images
+├── docs/SETUP.md                       Setup and maintenance guide
+├── .github/workflows/keep-alive.yml    Keeps the free database from pausing
+└── build.py                            Bundles the site into one self-contained HTML file
+```
+
+## Running locally
+
+Clone the repository, then serve it from the project folder:
+
+```bash
+python3 -m http.server 8000
+```
+
+Open http://localhost:8000. A few notes:
+
+- Use a local server rather than opening `index.html` directly, because browsers block the inventory request on `file://` pages. `python3 build.py` writes a self-contained copy to `dist/` that does work with a double-click.
+- Forms don't send from `localhost` unless you add `?send=1` to the address.
+- With `supabaseUrl` and `supabaseKey` left empty in `js/config.js`, the site reads `data/inventory.json` instead of the database.
+- Connecting a Supabase project for the manager page takes about 15 minutes. The steps are in [`docs/SETUP.md`](docs/SETUP.md), along with form email setup and the launch checklist.
+
+## How the project ran
+
+The project ran like a small client engagement. It began with discovery questions for the owner and a close look at another dealer's site he liked, a DealerCenter template whose credit application collected Social Security numbers and birth dates, which this build deliberately avoids. A written proposal followed, with 24 functional and non-functional requirements, a scope split between v1 and a later phase, a timeline, costs, risks, and system design diagrams: use case, sequence, and activity diagrams, an entity-relationship model, and a sitemap. DealerCenter and other DMS products were weighed against a custom build, and the plan settled on a custom site that could read a DMS feed later, which is why the data layer is isolated.
+
+Prototypes went to the owner as single-file preview links. After his feedback, a heavily illustrated first design was replaced with a plain, information-first layout closer to the site he'd pointed to, and later rounds added Spanish, search, and live lead emails. When he decided against a DMS, the manager page and Supabase backend were added, and the public site changed data sources without a rewrite.
+
+## Roadmap
+
+- Move to the dealership's own domain.
+- Pre-render a page per vehicle (for example with Astro) so each listing can show up in search results; today's hash-routed vehicle pages share one URL.
+- Embed a Google map and reviews once the Google Business Profile is live.
+- Move Supabase to the paid plan for daily backups once the business depends on the site.
+
+## Credits and license
+
+Built by Cesar Batrez-Delatorre for Elevate Auto Sales. Placeholder hero photo by Erik Mclean on Unsplash.
+
+No open-source license is offered. The code is public for review, and the Elevate Auto Sales name, logo, and site content belong to the dealership.
