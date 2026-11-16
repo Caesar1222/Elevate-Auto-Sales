@@ -55,7 +55,7 @@ window.ELEVATE_CONFIG = {
   // the database rules in supabase/setup.sql decide who can change anything.
   // Never put the secret (service role) key here. While these are empty, the
   // site reads data/inventory.json instead. See README, "Manager page".
-  supabaseUrl: 'https://mzttfbpeeuzwfnblofxu.supabase.co/rest/v1/',
+  supabaseUrl: 'https://mzttfbpeeuzwfnblofxu.supabase.co',
   supabaseKey: 'sb_publishable_qDnywAAFzwU5RvTJhI4rkg_qrkn4F-s',
 
   // Where form submissions (leads) go. FormSubmit (formsubmit.co, free, no
