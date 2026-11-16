@@ -47,7 +47,7 @@
       footerShop: 'Shop',
       footerNav: 'Footer',
       directions: 'Get directions',
-      legal: 'Prices exclude tax, title, license, and documentary fees. Vehicles are subject to prior sale. This preview shows sample listings.',
+      legal: 'Prices exclude tax, title, license, and documentary fees. Vehicles are subject to prior sale.',
       quickContact: 'Quick contact',
       call: 'Call',
       text: 'Text',
@@ -103,7 +103,7 @@
       salePending: 'Sale pending',
 
       invTitle: 'Inventory',
-      invSub: 'Sample listings for this preview. Real vehicles and photos will be added as they arrive.',
+      invSub: 'See what’s on the lot right now. Call or text with any questions.',
       filters: 'Filters',
       clearAll: 'Clear all',
       closeFilters: 'Close filters',
@@ -229,8 +229,6 @@
       aboutLead: '{name} is a newly licensed independent dealership at {street} in {city}.',
       aboutP2: 'We’re a small team, so you’ll deal with the same people from your first call to the day you drive away. Every car on the lot is listed with its price, and we can help with financing.',
       aboutP3: 'Stop by {days}, or call us at {phone}.',
-      ownerPhoto: 'Owner photo',
-      ownerName: 'Owner name',
       callN: 'Call {phone}',
       openMaps: 'Open in Google Maps',
 
@@ -252,6 +250,8 @@
       missingText: 'This vehicle may have sold. Browse the rest of the lot to find something similar.',
       errorTitle: 'Inventory unavailable',
       errorText: 'The vehicle list didn’t load. Call {phone} for current inventory.',
+      emptyLotTitle: 'New cars arriving soon',
+      emptyLotText: 'We’re stocking the lot now. Call or text {phone} to ask what’s coming in, or get pre-qualified so you’re ready when it arrives.',
 
       sending: 'Sending…',
       sentAvailT: 'Message sent',
@@ -304,7 +304,7 @@
     values: {
       transmission: { Automatic: 'Automática', Manual: 'Manual', CVT: 'CVT' },
       fuel: { Gasoline: 'Gasolina', Hybrid: 'Híbrido', Electric: 'Eléctrico', Diesel: 'Diésel' },
-      badge: { 'Just arrived': 'Recién llegado' },
+      badge: { 'Just arrived': 'Recién llegado', 'Low miles': 'Pocas millas', 'Price drop': 'Precio rebajado' },
       feature: {
         'Adaptive cruise control': 'Control de crucero adaptativo',
         'Alloy wheels': 'Rines de aleación',
@@ -369,7 +369,7 @@
       footerShop: 'Comprar',
       footerNav: 'Pie de página',
       directions: 'Cómo llegar',
-      legal: 'Los precios no incluyen impuestos, título, placas ni cargos de documentación. Los vehículos están sujetos a venta previa. Esta vista previa muestra vehículos de muestra.',
+      legal: 'Los precios no incluyen impuestos, título, placas ni cargos de documentación. Los vehículos están sujetos a venta previa.',
       quickContact: 'Contacto rápido',
       call: 'Llamar',
       text: 'Mensaje',
@@ -425,7 +425,7 @@
       salePending: 'Venta pendiente',
 
       invTitle: 'Inventario',
-      invSub: 'Vehículos de muestra para esta vista previa. Los vehículos y fotos reales se agregarán a medida que lleguen.',
+      invSub: 'Vea lo que tenemos en el lote ahora. Llámenos o envíenos un mensaje si tiene preguntas.',
       filters: 'Filtros',
       clearAll: 'Borrar todo',
       closeFilters: 'Cerrar filtros',
@@ -551,8 +551,6 @@
       aboutLead: '{name} es un concesionario independiente con licencia reciente, ubicado en {street}, {city}.',
       aboutP2: 'Somos un equipo pequeño, así que tratará con las mismas personas desde su primera llamada hasta el día en que se lleve su auto. Cada auto del lote se publica con su precio, y podemos ayudarle con el financiamiento.',
       aboutP3: 'Visítenos {days} o llámenos al {phone}.',
-      ownerPhoto: 'Foto del dueño',
-      ownerName: 'Nombre del dueño',
       callN: 'Llamar al {phone}',
       openMaps: 'Abrir en Google Maps',
 
@@ -574,6 +572,8 @@
       missingText: 'Es posible que este vehículo ya se haya vendido. Vea el resto del lote para encontrar algo similar.',
       errorTitle: 'Inventario no disponible',
       errorText: 'La lista de vehículos no se cargó. Llame al {phone} para conocer el inventario actual.',
+      emptyLotTitle: 'Nuevos autos muy pronto',
+      emptyLotText: 'Estamos surtiendo el lote. Llame o envíe un mensaje al {phone} para preguntar qué está por llegar, o precalifique para estar listo cuando llegue.',
 
       sending: 'Enviando…',
       sentAvailT: 'Mensaje enviado',

@@ -1,21 +1,26 @@
 /* ==========================================================================
    Inventory source: the ONLY file that knows where vehicles come from.
 
-   Today it reads the sample file data/inventory.json (or a copy embedded in
-   the page by build.py). When the dealership picks an inventory system, change
-   load() to read that system's feed or API, and adjust normalize() so each
-   record maps to the fields below. Nothing else in the site needs to change.
+   With supabaseUrl and supabaseKey set in js/config.js, cars come from the
+   manager database (the manager page at /manager/ adds and edits them).
+   Without them, it reads data/inventory.json (or the copy build.py embeds).
+   To switch to another inventory system later, change load() and map its
+   records in normalize(). Nothing else in the site needs to change.
 
    Vehicle shape used by the site:
      id, stockNumber, vin, year, make, model, trim, bodyType, price, mileage,
      exteriorColor, exteriorColorHex, interiorColor, transmission, drivetrain,
      engine, fuelType, mpgCity, mpgHighway, features[], description, photos[],
-     dateInStock (YYYY-MM-DD), status ("available" | "pending" | "sold"), badge
+     dateInStock (YYYY-MM-DD), status ("available" | "pending" | "sold"), badge,
+     thumbs[] (small copies of photos[], same order; optional)
    ========================================================================== */
 (function () {
   'use strict';
 
   const SOURCE_URL = 'data/inventory.json';
+  const C = window.ELEVATE_CONFIG || {};
+  const DB_URL = String(C.supabaseUrl || '').trim().replace(/\/+$/, '');
+  const DB_KEY = String(C.supabaseKey || '').trim();
 
   // Used when a feed gives a color name but no swatch (most feeds don't).
   const COLOR_RULES = [
@@ -50,6 +55,7 @@
     const photos = Array.isArray(r.photos)
       ? r.photos
       : String(r.photoUrls ?? r.PhotoURLs ?? '').split(/[|,]/).map((s) => s.trim()).filter(Boolean);
+    const thumbs = Array.isArray(r.thumbs) && r.thumbs.length === photos.length ? r.thumbs : photos;
     const features = Array.isArray(r.features)
       ? r.features
       : String(r.options ?? r.Options ?? '').split(/[|,]/).map((s) => s.trim()).filter(Boolean);
@@ -76,6 +82,7 @@
       features,
       description: String(r.description ?? r.comments ?? r.Comments ?? ''),
       photos,
+      thumbs,
       dateInStock: String(r.dateInStock ?? r.DateInStock ?? ''),
       status: String(r.status ?? 'available').toLowerCase(),
       badge: String(r.badge ?? ''),
@@ -86,7 +93,57 @@
     return v;
   }
 
+  // A row from the manager database (snake_case columns, photos stored as
+  // { url, thumb, path, thumbPath }) in the shape normalize() expects.
+  const isWebUrl = (u) => /^https:\/\//i.test(String(u || ''));
+  function fromDb(row) {
+    const shots = (Array.isArray(row.photos) ? row.photos : []).filter((p) => p && isWebUrl(p.url));
+    return {
+      stockNumber: row.stock_number,
+      vin: row.vin,
+      year: row.year,
+      make: row.make,
+      model: row.model,
+      trim: row.trim,
+      bodyType: row.body_type || 'Sedan',
+      price: row.price,
+      mileage: row.mileage,
+      exteriorColor: row.exterior_color,
+      interiorColor: row.interior_color,
+      transmission: row.transmission,
+      drivetrain: row.drivetrain,
+      engine: row.engine,
+      fuelType: row.fuel_type,
+      mpgCity: row.mpg_city,
+      mpgHighway: row.mpg_highway,
+      features: Array.isArray(row.features) ? row.features : [],
+      description: row.description,
+      photos: shots.map((p) => p.url),
+      thumbs: shots.map((p) => (isWebUrl(p.thumb) ? p.thumb : p.url)),
+      dateInStock: row.date_in_stock || String(row.created_at || '').slice(0, 10),
+      status: row.status,
+      badge: row.badge,
+    };
+  }
+
+  async function readDatabase() {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 12000);
+    try {
+      const res = await fetch(`${DB_URL}/rest/v1/vehicles?select=*&status=neq.sold&order=date_in_stock.desc,created_at.desc`, {
+        headers: { apikey: DB_KEY, Authorization: `Bearer ${DB_KEY}` },
+        cache: 'no-store',
+        signal: ctrl.signal,
+      });
+      if (!res.ok) throw new Error(`Inventory database responded with status ${res.status}.`);
+      return (await res.json()).map(fromDb);
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
   async function readRaw() {
+    if (DB_URL && DB_KEY) return readDatabase();
     const embedded = document.getElementById('inventory-data');
     if (embedded) return JSON.parse(embedded.textContent);
     const res = await fetch(SOURCE_URL, { cache: 'no-store' });
@@ -100,5 +157,5 @@
     return list.map(normalize).filter((v) => v.id && v.status !== 'sold');
   }
 
-  window.InventorySource = { load, normalize };
+  window.InventorySource = { load, normalize, fromDb };
 })();

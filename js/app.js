@@ -150,7 +150,7 @@
   const hasPhotos = (v) => Array.isArray(v.photos) && v.photos.length > 0;
 
   function cardMedia(v) {
-    if (hasPhotos(v)) return `<img src="${esc(v.photos[0])}" alt="" loading="lazy" decoding="async">`;
+    if (hasPhotos(v)) return `<img src="${esc((v.thumbs && v.thumbs[0]) || v.photos[0])}" alt="" loading="lazy" decoding="async">`;
     return Brand.photoPlaceholder({ label: esc(t('photoSoon')), decorative: true });
   }
 
@@ -538,12 +538,14 @@
     const recent = avail.slice().sort((a, b) => b.dateInStock.localeCompare(a.dateInStock)).slice(0, 8);
     const count = (b) => avail.filter((v) => v.bodyType === b).length;
     const total = state.inventory.length;
+    const hasCars = avail.length > 0;
     return `
     ${heroMarkup()}
 
     <section class="intro" aria-labelledby="search-title">
       <div class="wrap intro-grid">
         <div class="intro-main">
+          ${hasCars ? `
           <h2 class="section-title" id="search-title">${esc(t('searchTitle'))}</h2>
           <form class="search" id="quick-search" role="search" aria-label="${esc(t('searchAria'))}">
             <label class="field"><span class="field-label">${esc(t('make'))}</span>
@@ -556,7 +558,7 @@
           </form>
           <nav class="type-links" aria-label="${esc(t('browseByBody'))}">
             ${BODY_ORDER.map((b) => `<a href="#inventory" data-body="${b}">${esc(bodyPlural(b))}<span class="type-count">${count(b)}</span></a>`).join('')}
-          </nav>
+          </nav>` : lotNotice('search-title')}
         </div>
         <aside class="visit-card" aria-label="${esc(t('hoursLocation'))}">
           <p class="visit-card-status">${statusMarkup()}</p>
@@ -570,7 +572,7 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="lot-title">
+    ${hasCars ? `<section class="section" aria-labelledby="lot-title">
       <div class="wrap">
         <div class="section-head">
           <h2 class="section-title" id="lot-title">${esc(t('onLot'))}</h2>
@@ -578,7 +580,7 @@
         </div>
         <div class="grid">${recent.map(card).join('')}</div>
       </div>
-    </section>
+    </section>` : ''}
 
     <section class="section section--alt">
       <div class="wrap two-up">
@@ -658,6 +660,10 @@
   const SORTS = { newest: 'sortNewest', 'price-asc': 'sortPriceAsc', 'price-desc': 'sortPriceDesc', miles: 'sortMiles', year: 'sortYear' };
 
   function viewInventory() {
+    if (!state.inventory.length) {
+      return `${pageTop(t('invTitle'))}
+      <section class="section"><div class="wrap">${lotNotice()}</div></section>`;
+    }
     const f = state.filters;
     const years = uniq(state.inventory.map((v) => v.year)).sort((a, b) => a - b);
     return `
@@ -737,6 +743,7 @@
   let searchTimer = 0;
   function afterInventory() {
     const form = $('#filter-form');
+    if (!form) return;
     form.addEventListener('submit', (e) => e.preventDefault());
     form.addEventListener('input', (e) => {
       if (e.target.name !== 'q') return;
@@ -904,7 +911,7 @@
       const shots = v.photos.slice(0, 12);
       return `<div class="gallery-stage"><img data-gallery-main src="${esc(shots[0])}" alt="${esc(`${v.year} ${v.make} ${v.model}`)}">${badgeFor(v)}</div>
         <div class="gallery-thumbs" role="group" aria-label="${esc(t('choosePhoto'))}">
-          ${shots.map((src, i) => `<button class="thumb${i === 0 ? ' is-active' : ''}" type="button" data-thumb="${i}" aria-pressed="${i === 0}" aria-label="${esc(t('photoN', { n: i + 1 }))}"><img src="${esc(src)}" alt="" loading="lazy"></button>`).join('')}
+          ${shots.map((src, i) => `<button class="thumb${i === 0 ? ' is-active' : ''}" type="button" data-thumb="${i}" aria-pressed="${i === 0}" aria-label="${esc(t('photoN', { n: i + 1 }))}"><img src="${esc((v.thumbs && v.thumbs[i]) || src)}" alt="" loading="lazy"></button>`).join('')}
         </div>`;
     }
     return `<div class="gallery-stage">${Brand.photoPlaceholder({ label: esc(t('photosSoon')), size: 'lg' })}${badgeFor(v)}</div>
@@ -1122,10 +1129,6 @@
           <p>${esc(t('aboutP2'))}</p>
           <p>${t('aboutP3', { days: esc(openDaysPhrase()), phone: `<a class="text-link" href="${telHref}">${esc(C.phoneDisplay)}</a>` })}</p>
         </div>
-        <figure class="owner">
-          ${Brand.photoPlaceholder({ label: esc(t('ownerPhoto')), size: 'portrait' })}
-          <figcaption><strong class="owner-name">${esc(C.owner || t('ownerName'))}</strong></figcaption>
-        </figure>
       </div>
     </section>
     <section class="section section--alt">
@@ -1204,17 +1207,30 @@
 
   /* ---------- Fallback views ---------- */
   function viewMissing() {
+    if (state.loadError) {
+      return `${pageTop(t('errorTitle'))}
+      <section class="section"><div class="wrap">${lotNotice()}</div></section>`;
+    }
     return `${pageTop(t('missingTitle'), t('missingText'))}
     <section class="section"><div class="wrap"><a class="btn btn--primary" href="#inventory">${esc(t('browse'))}</a></div></section>`;
   }
 
-  function viewLoadError() {
-    const local = location.protocol === 'file:';
-    return `${pageTop(t('errorTitle'), t('errorText', { phone: C.phoneDisplay }))}
-    <section class="section"><div class="wrap">
+  // Shown where listings would be when the lot is empty or the list didn't
+  // load. The rest of the site (financing, contact, about) keeps working.
+  function lotNotice(headingId = '') {
+    const id = headingId ? ` id="${headingId}"` : '';
+    const phone = `<a class="text-link" href="${telHref}">${esc(C.phoneDisplay)}</a>`;
+    const failed = !!state.loadError;
+    const local = failed && location.protocol === 'file:';
+    return `<div class="lot-notice">
+      <h2 class="section-title"${id}>${esc(t(failed ? 'errorTitle' : 'emptyLotTitle'))}</h2>
+      <p>${failed ? t('errorText', { phone }) : t('emptyLotText', { phone })}</p>
       ${local ? '<p class="dev-note" lang="en">Opened from a file? Browsers block loading data/inventory.json that way. Run <code>python3 -m http.server</code> in the project folder and open http://localhost:8000, or use the single-file build in dist/.</p>' : ''}
-      <a class="btn btn--primary" href="${telHref}">${esc(t('callN', { phone: C.phoneDisplay }))}</a>
-    </div></section>`;
+      <div class="btn-row">
+        <a class="btn btn--primary" href="${telHref}">${icon('phone')}<span>${esc(t('callN', { phone: C.phoneDisplay }))}</span></a>
+        <a class="btn btn--outline" href="#financing">${esc(t('prequal'))}</a>
+      </div>
+    </div>`;
   }
 
   /* ---------- Forms (leads) ---------- */
@@ -1424,10 +1440,7 @@
     openFilters(false);
     let key = name;
     let title = '';
-    if (state.loadError) {
-      view.innerHTML = viewLoadError();
-      key = 'error';
-    } else if (name.startsWith('v-')) {
+    if (name.startsWith('v-')) {
       const v = byId(name.slice(2));
       if (v) {
         view.innerHTML = viewVehicle(v);

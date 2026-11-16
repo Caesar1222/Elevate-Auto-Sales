@@ -1,8 +1,9 @@
-# Elevate Auto Sales website (prototype)
+# Elevate Auto Sales website
 
-A visual prototype of the dealership site with sample inventory, grey photo
-placeholders, and placeholder copy. It's plain HTML, CSS, and JavaScript: no framework, no dependencies, no
-build step required to run it.
+The dealership's website. It's plain HTML, CSS, and JavaScript: no framework,
+no dependencies, no build step required to run it. Cars are added, edited, and
+removed on the manager page (`/manager/`) and stored in Supabase; see
+"Manager page" below.
 
 ## Run it
 
@@ -22,7 +23,10 @@ build step required to run it.
 | --- | --- |
 | `js/config.js` | Name, phone, email, address, hours, tagline, and where form emails go. Edit dealership details here only. |
 | `js/inventory-source.js` | The only file that knows where vehicles come from. Swap the data source here. |
-| `data/inventory.json` | 20 sample vehicles, shaped like a typical dealer inventory feed. |
+| `data/inventory.json` | Fallback car list (empty), used only until the manager database is connected. |
+| `manager/` | The manager page: sign in, add and edit cars, upload photos, mark cars sold. |
+| `supabase/setup.sql` | One-time database setup for the manager page (tables, rules, photo storage). |
+| `.github/workflows/keep-alive.yml` | Reads the car list every few days so the free database never pauses. |
 | `js/app.js` | Pages (hash routes), filters, vehicle pages, forms, calculator, saved vehicles. |
 | `js/brand.js` | The logo and the grey photo and map placeholders. |
 | `js/i18n.js` | Every visible string in English and Spanish, plus translations for vehicle features. |
@@ -67,25 +71,86 @@ language. So a Spanish-language phone gets Spanish automatically.
   consistent.
 - The tagline "Drive Higher. Drive Better." stays in English as a brand line.
 
-## Connecting the real inventory system
+## Manager page
 
-1. Ask the inventory/DMS provider for a **website inventory feed** (usually a
-   CSV or XML file updated on a schedule, or an API).
-2. In `js/inventory-source.js`, point `load()` at it and map its column names in
-   `normalize()`. The rest of the site uses the normalized fields, so nothing
-   else changes.
-3. Photos: see "Adding vehicle photos" below.
-4. If the feed can't be fetched from the browser (CORS, or it's a file on an
-   FTP server), have a small scheduled job convert it to `inventory.json`.
+The dealership adds, edits, and removes cars at **/manager/** on the website
+(for example `https://your-site/manager/`). It's built for a phone:
+
+1. Sign in with email and password.
+2. Tap **Add a car** and type the VIN. Year, make, model, trim, body style,
+   drivetrain, engine, and fuel fill in from NHTSA's free VIN decoder.
+3. Add the price, mileage, colors, and photos (camera or photo library), then
+   tap **Save and publish**. The car is on the site right away.
+4. **Mark sold** takes a car off the site and keeps it under "Sold" (it can go
+   back on sale). **Delete**, inside Edit, removes the car and its photos for good.
+
+Photos are shrunk on the phone before uploading (1600px, plus a small copy for
+lists), and the first photo is the main one. The stock number defaults to the
+last 6 characters of the VIN and becomes the car's web address (`#v-...`).
+
+Cars, photos, and logins live in [Supabase](https://supabase.com) on the free
+plan. Until the setup below is done, the site reads `data/inventory.json`
+(empty) and shows a "New cars arriving soon" message where cars would be.
+
+### One-time setup (about 15 minutes)
+
+1. Create a free account at supabase.com and a **new project** (name it
+   anything; pick a region near Chicago, like East US). Save the database
+   password somewhere safe; the website doesn't need it.
+2. **SQL Editor > New query:** paste all of `supabase/setup.sql` and click
+   **Run**. This creates the cars table, the photo storage, and the rules that
+   let only managers make changes.
+3. **Authentication > Sign In / Providers:** turn off **Allow new users to sign
+   up**, so nobody can create their own login.
+4. **Authentication > Users > Add user > Create new user:** enter Axel's email
+   and a temporary password, and check **Auto Confirm User**. Then make him a
+   manager by running this in the SQL editor with his email:
+   ```sql
+   insert into public.admins (user_id)
+   select id from auth.users where email = 'his.email@example.com';
+   ```
+   Do the same for your own login if you want one.
+5. **Authentication > URL Configuration:** set **Site URL** to the website's
+   address and add `https://your-site/manager/` under **Redirect URLs**, so
+   "Forgot your password?" emails lead back to the manager page.
+6. **Project Settings > API Keys:** copy the **Project URL** and the
+   **publishable** key into `supabaseUrl` and `supabaseKey` in `js/config.js`.
+   Never put the secret key there.
+7. Commit and push, open `/manager/`, sign in, and add a test car.
+
+Then send Axel the address, his email, and the temporary password. He can pick
+his own any time with "Forgot your password?". On his phone, **Add to Home
+Screen** from the browser's share menu makes it one tap away.
+
+### Good to know
+
+- **Free plan pausing:** Supabase pauses free projects after about a week with
+  little database activity, which takes the cars off the site until someone
+  clicks **Resume** in the Supabase dashboard (it emails a warning first, and
+  nothing is lost). Shoppers browsing count as activity, and
+  `.github/workflows/keep-alive.yml` reads the car list every 3 days as a
+  backup. GitHub turns off scheduled workflows in public repositories after 60
+  days with no commits; it emails first, and one click on the **Actions** tab
+  turns it back on. The $25/month paid plan never pauses and adds daily backups.
+- **Space:** the free plan's 1 GB of photo storage holds roughly 2,000 photos.
+  Deleting sold cars frees space.
+- **If the database can't be reached,** the rest of the site keeps working and
+  the inventory spots show the phone number instead of cars.
+- **Security:** the publishable key in `js/config.js` is meant to be public.
+  The rules in `supabase/setup.sql` let shoppers read cars that aren't sold and
+  let only logins in the `admins` table add, change, or delete cars and photos.
+- `js/config.js` and the keep-alive workflow assume this folder is the top
+  level of the repository.
+- **Switching systems later:** `js/inventory-source.js` is the only file that
+  knows where cars come from. Point `load()` at another feed and map its fields
+  in `normalize()`.
 
 ## Adding vehicle photos
 
-Every listing shows grey "Photo coming soon" boxes until it has photos. To add
-them, list the image URLs in that vehicle's `photos` array in
-`data/inventory.json` (or let the inventory feed supply them). The first photo
-becomes the main image on cards and the vehicle page, and up to 12 appear in the
-vehicle page gallery. Landscape 4:3 photos at least 1600px wide work best;
-compress them so pages load quickly on phones.
+Every listing shows grey "Photo coming soon" boxes until it has photos. Add
+them on the manager page (see above). The first photo becomes the main image on
+cards and the vehicle page, and up to 12 appear in the vehicle page gallery.
+Landscape photos work best: stand back far enough to fit the whole car.
 
 ## Hero photo (placeholder until the video)
 
@@ -174,54 +239,11 @@ The financing form is a pre-qualification: it never asks for a Social
 Security number or birth date, which shouldn't travel by email. Full credit
 applications belong on the lender's or DMS's secure application.
 
-## Adding a car
-
-Add an entry to the `vehicles` list in `data/inventory.json` (or let the
-inventory feed supply it), then redeploy. Copy this and change the values:
-
-```json
-{
-  "stockNumber": "EA1021",
-  "vin": "1HGCV1F30KA012345",
-  "year": 2019,
-  "make": "Honda",
-  "model": "Accord",
-  "trim": "Sport 1.5T",
-  "bodyType": "Sedan",
-  "price": 18995,
-  "mileage": 64210,
-  "exteriorColor": "Platinum White Pearl",
-  "interiorColor": "Black cloth",
-  "transmission": "CVT",
-  "drivetrain": "FWD",
-  "engine": "1.5L Turbo I4",
-  "fuelType": "Gasoline",
-  "mpgCity": 30,
-  "mpgHighway": 38,
-  "features": ["Apple CarPlay", "Backup camera", "Heated front seats"],
-  "photos": ["assets/cars/EA1021-1.jpg", "assets/cars/EA1021-2.jpg"],
-  "dateInStock": "2026-11-20",
-  "status": "available",
-  "badge": "Just arrived"
-}
-```
-
-- `stockNumber` must be unique; it becomes the page address (`#v-ea1021`).
-- `bodyType`: Sedan, SUV, Truck, Minivan, or Coupe. `drivetrain`: FWD, AWD,
-  4WD, or RWD. `transmission`: Automatic, Manual, or CVT. `fuelType`:
-  Gasoline, Hybrid, Electric, or Diesel. Other values show as written and
-  don't get Spanish translations.
-- `status`: `available`, `pending` (shows "Sale pending"), or `sold` (hidden
-  from the site). `badge` is optional.
-- Photos: save them in `assets/cars/` and deploy the whole folder (the
-  single-file build doesn't carry vehicle photos). See "Adding vehicle
-  photos" below.
-
 ## Launch test
 
 Once the site is online:
 
-1. Add one real car (see "Adding a car") and redeploy.
+1. Add one real car on the manager page.
 2. Open its page on a phone and check the price, details, and photos.
 3. Send a financing application from the Financing page, picking that car.
 4. In elevatellc47@gmail.com (spam folder too), click **Activate Form** in
@@ -240,15 +262,12 @@ GitHub Pages. Point the dealership's domain at it.
 
 - [ ] **Logo:** the header logo is a vector recreation. Swap in the original
       files from whoever designed the banner (`logo()` and `emblem()` in `js/brand.js`).
-- [ ] **Photos:** vehicle photos, plus a photo of the owner for the About page.
+- [ ] **Manager page:** finish the one-time setup in "Manager page" and add the first cars.
 - [ ] **Hero:** swap the stock placeholder photo for the dealership's own video or photo of the lot.
-- [ ] **About page:** the story is placeholder text. The owner's name is set in `js/config.js` (`owner`).
+- [ ] **About page:** the story is placeholder text.
 - [ ] **Claims to confirm with the owner:** "a price on every car," "history
       reports on request," financing wording, and response-time language.
 - [ ] **Form emails:** activate FormSubmit (see "Form emails") and run the launch test.
-- [ ] **Sample listings:** remove the 20 sample vehicles before the site is
-      public, and the two "sample listings" notes in `js/i18n.js` (`invSub`
-      and `legal`, in English and Spanish).
 - [ ] **Consent text** on forms (phone/text/email contact) should be reviewed.
 - [ ] **Credit applications:** this site never asks for an SSN or birth date.
       For full applications, link to the lender's or DMS's secure application
@@ -260,12 +279,11 @@ GitHub Pages. Point the dealership's domain at it.
 - [ ] **Map:** replace the grey map box with a Google Maps embed once the
       Google Business Profile is live, and add a review link.
 - [ ] **Privacy policy page** (the forms collect personal information).
-- [ ] Replace the sample inventory with the real feed.
 - [ ] **Spanish:** have a native speaker read through `js/i18n.js` (and decide whether to translate the tagline).
 
 ## Suggested next step
 
-Once the inventory system is chosen, move to Astro so each vehicle gets its own
+Later, consider moving to Astro so each vehicle gets its own
 pre-rendered page that search engines index well, with separate `/es/` pages so
 Spanish searches find the site too. The CSS and most of the
 markup carry over directly.

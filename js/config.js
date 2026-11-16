@@ -4,7 +4,6 @@
 window.ELEVATE_CONFIG = {
   name: 'Elevate Auto Sales',
   legalName: 'Elevate Auto Sales LLC',
-  owner: 'Axel Munoz', // shown on the About page
   tagline: 'Drive Higher. Drive Better.', // as written on the banner
 
   phoneDisplay: '(773) 373-5448',
@@ -49,6 +48,15 @@ window.ELEVATE_CONFIG = {
     src: 'assets/hero-photo.jpg',
     position: 'center',
   },
+
+  // The manager database (Supabase) that holds the cars and their photos.
+  // Paste the Project URL and the publishable key from Supabase:
+  // Project Settings > API Keys. The publishable key is meant to be public;
+  // the database rules in supabase/setup.sql decide who can change anything.
+  // Never put the secret (service role) key here. While these are empty, the
+  // site reads data/inventory.json instead. See README, "Manager page".
+  supabaseUrl: '',
+  supabaseKey: '',
 
   // Where form submissions (leads) go. FormSubmit (formsubmit.co, free, no
   // account) emails each one to the address at the end of this URL. The first

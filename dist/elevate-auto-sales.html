@@ -899,14 +899,15 @@ button.thumb { cursor: pointer; }
   .fin-aside { position: sticky; top: calc(var(--sticky-h) + env(safe-area-inset-top, 0px) + 24px); }
 }
 
+/* ---------- Empty lot / list didn't load ---------- */
+.lot-notice { display: grid; gap: 14px; justify-items: start; max-width: 40rem; }
+.lot-notice p { color: var(--ink-2); font-size: 1.0625rem; }
+.lot-notice .btn-row { margin-top: 4px; }
+
 /* ---------- About ---------- */
 .about-grid { display: grid; gap: 36px; }
 .about-text { display: grid; gap: 16px; max-width: 38rem; color: var(--ink-2); font-size: 1.125rem; }
 .about-lead { color: var(--ink); font-size: 1.3rem; line-height: 1.45; font-weight: 500; }
-.owner { display: grid; gap: 10px; max-width: 320px; }
-.owner figcaption { display: grid; }
-.owner-name { font-size: 1.125rem; }
-@media (min-width: 860px) { .about-grid { grid-template-columns: minmax(0, 1fr) 300px; gap: 64px; align-items: start; } }
 
 /* ---------- Contact ---------- */
 .contact-grid { display: grid; gap: 40px; }
@@ -1017,7 +1018,7 @@ button.thumb { cursor: pointer; }
     </div>
   </main>
   <div id="shell-bottom"></div>
-  <script type="application/json" id="inventory-data">{"note":"Sample vehicles for the prototype. Replace with the feed from the dealership's inventory system; see js/inventory-source.js.","vehicles":[{"stockNumber":"EA1001","vin":"SAMPLE00000001001","year":2016,"make":"Ford","model":"F-150","trim":"XLT SuperCrew 4x4","bodyType":"Truck","price":18995,"mileage":132480,"exteriorColor":"Oxford White","exteriorColorHex":"#F3F4F1","interiorColor":"Medium Earth Gray cloth","transmission":"Automatic","drivetrain":"4WD","engine":"2.7L EcoBoost V6","fuelType":"Gasoline","mpgCity":18,"mpgHighway":23,"features":["Tow package","Backup camera","SYNC","Bed liner","Trailer brake controller","Power driver seat"],"photos":[],"dateInStock":"2026-11-09","status":"available","badge":"Just arrived"},{"stockNumber":"EA1002","vin":"SAMPLE00000001002","year":2018,"make":"Honda","model":"Accord","trim":"Sport","bodyType":"Sedan","price":15495,"mileage":98410,"exteriorColor":"Lunar Silver Metallic","exteriorColorHex":"#C5CAD0","interiorColor":"Black cloth","transmission":"CVT","drivetrain":"FWD","engine":"1.5L Turbo I4","fuelType":"Gasoline","mpgCity":29,"mpgHighway":35,"features":["Apple CarPlay","Android Auto","Backup camera","Lane keeping assist","Adaptive cruise control","Alloy wheels"],"photos":[],"dateInStock":"2026-11-08","status":"available","badge":"Just arrived"},{"stockNumber":"EA1003","vin":"SAMPLE00000001003","year":2017,"make":"Toyota","model":"Camry","trim":"SE","bodyType":"Sedan","price":12995,"mileage":112960,"exteriorColor":"Midnight Black Metallic","exteriorColorHex":"#16181D","interiorColor":"Black SofTex","transmission":"Automatic","drivetrain":"FWD","engine":"2.5L I4","fuelType":"Gasoline","mpgCity":24,"mpgHighway":33,"features":["Backup camera","Bluetooth","Sport-tuned suspension","Alloy wheels","Keyless entry"],"photos":[],"dateInStock":"2026-11-06","status":"available"},{"stockNumber":"EA1004","vin":"SAMPLE00000001004","year":2016,"make":"Nissan","model":"Altima","trim":"2.5 SV","bodyType":"Sedan","price":8495,"mileage":121300,"exteriorColor":"Gun Metallic","exteriorColorHex":"#5B6169","interiorColor":"Charcoal cloth","transmission":"CVT","drivetrain":"FWD","engine":"2.5L I4","fuelType":"Gasoline","mpgCity":27,"mpgHighway":39,"features":["Remote start","Backup camera","Blind spot warning","Heated front seats","Push-button start"],"photos":[],"dateInStock":"2026-10-29","status":"available"},{"stockNumber":"EA1005","vin":"SAMPLE00000001005","year":2015,"make":"Chevrolet","model":"Malibu","trim":"LT","bodyType":"Sedan","price":7995,"mileage":118760,"exteriorColor":"Crystal Red Tintcoat","exteriorColorHex":"#8E1B24","interiorColor":"Jet Black cloth","transmission":"Automatic","drivetrain":"FWD","engine":"2.5L I4","fuelType":"Gasoline","mpgCity":25,"mpgHighway":36,"features":["Bluetooth","Backup camera","Remote keyless entry","Alloy wheels"],"photos":[],"dateInStock":"2026-10-24","status":"available"},{"stockNumber":"EA1006","vin":"SAMPLE00000001006","year":2018,"make":"Dodge","model":"Charger","trim":"SXT","bodyType":"Sedan","price":15995,"mileage":89640,"exteriorColor":"Pitch Black","exteriorColorHex":"#121317","interiorColor":"Black cloth","transmission":"Automatic","drivetrain":"RWD","engine":"3.6L V6","fuelType":"Gasoline","mpgCity":19,"mpgHighway":30,"features":["Uconnect touchscreen","Backup camera","Push-button start","Dual-zone climate control","Alloy wheels"],"photos":[],"dateInStock":"2026-11-05","status":"available"},{"stockNumber":"EA1007","vin":"SAMPLE00000001007","year":2017,"make":"Hyundai","model":"Elantra","trim":"SE","bodyType":"Sedan","price":8995,"mileage":101250,"exteriorColor":"Electric Blue Metallic","exteriorColorHex":"#2D5DBF","interiorColor":"Black cloth","transmission":"Automatic","drivetrain":"FWD","engine":"2.0L I4","fuelType":"Gasoline","mpgCity":28,"mpgHighway":37,"features":["Bluetooth","Backup camera","Cruise control","Keyless entry"],"photos":[],"dateInStock":"2026-10-21","status":"available"},{"stockNumber":"EA1008","vin":"SAMPLE00000001008","year":2016,"make":"Ford","model":"Mustang","trim":"EcoBoost Premium","bodyType":"Coupe","price":15495,"mileage":84300,"exteriorColor":"Race Red","exteriorColorHex":"#C8102E","interiorColor":"Ebony leather","transmission":"Automatic","drivetrain":"RWD","engine":"2.3L EcoBoost I4","fuelType":"Gasoline","mpgCity":21,"mpgHighway":32,"features":["Leather seats","Heated and cooled front seats","SYNC","Backup camera","Push-button start","Premium audio"],"photos":[],"dateInStock":"2026-11-07","status":"available","badge":"Just arrived"},{"stockNumber":"EA1009","vin":"SAMPLE00000001009","year":2017,"make":"Honda","model":"CR-V","trim":"EX AWD","bodyType":"SUV","price":16495,"mileage":104620,"exteriorColor":"Modern Steel Metallic","exteriorColorHex":"#4E545C","interiorColor":"Gray cloth","transmission":"CVT","drivetrain":"AWD","engine":"1.5L Turbo I4","fuelType":"Gasoline","mpgCity":27,"mpgHighway":33,"features":["Apple CarPlay","Android Auto","Power moonroof","Heated front seats","Remote start","LaneWatch camera"],"photos":[],"dateInStock":"2026-11-04","status":"available"},{"stockNumber":"EA1010","vin":"SAMPLE00000001010","year":2018,"make":"Chevrolet","model":"Equinox","trim":"LT AWD","bodyType":"SUV","price":12495,"mileage":96880,"exteriorColor":"Summit White","exteriorColorHex":"#F4F5F2","interiorColor":"Jet Black cloth","transmission":"Automatic","drivetrain":"AWD","engine":"1.5L Turbo I4","fuelType":"Gasoline","mpgCity":25,"mpgHighway":30,"features":["Apple CarPlay","Android Auto","Remote start","Heated front seats","Backup camera","Wi-Fi hotspot"],"photos":[],"dateInStock":"2026-10-30","status":"available"},{"stockNumber":"EA1011","vin":"SAMPLE00000001011","year":2017,"make":"Nissan","model":"Rogue","trim":"SV AWD","bodyType":"SUV","price":9995,"mileage":109050,"exteriorColor":"Caspian Blue","exteriorColorHex":"#203A6B","interiorColor":"Charcoal cloth","transmission":"CVT","drivetrain":"AWD","engine":"2.5L I4","fuelType":"Gasoline","mpgCity":25,"mpgHighway":32,"features":["Backup camera","Remote start","Heated front seats","Blind spot warning","Bluetooth"],"photos":[],"dateInStock":"2026-10-26","status":"available"},{"stockNumber":"EA1012","vin":"SAMPLE00000001012","year":2016,"make":"Jeep","model":"Grand Cherokee","trim":"Limited 4x4","bodyType":"SUV","price":13495,"mileage":128260,"exteriorColor":"Diamond Black Crystal","exteriorColorHex":"#14161B","interiorColor":"Black leather","transmission":"Automatic","drivetrain":"4WD","engine":"3.6L V6","fuelType":"Gasoline","mpgCity":18,"mpgHighway":25,"features":["Leather seats","Heated front and rear seats","Power sunroof","Navigation","Power liftgate","Remote start"],"photos":[],"dateInStock":"2026-10-20","status":"available"},{"stockNumber":"EA1013","vin":"SAMPLE00000001013","year":2016,"make":"Ford","model":"Explorer","trim":"XLT 4WD","bodyType":"SUV","price":11495,"mileage":133710,"exteriorColor":"Ingot Silver","exteriorColorHex":"#BCC1C7","interiorColor":"Ebony cloth","transmission":"Automatic","drivetrain":"4WD","engine":"3.5L V6","fuelType":"Gasoline","mpgCity":16,"mpgHighway":22,"features":["Third-row seating","Backup camera","SYNC","Rear parking sensors","Tow package"],"photos":[],"dateInStock":"2026-10-17","status":"available"},{"stockNumber":"EA1014","vin":"SAMPLE00000001014","year":2015,"make":"Lexus","model":"RX 350","trim":"AWD","bodyType":"SUV","price":16995,"mileage":126240,"exteriorColor":"Eminent White Pearl","exteriorColorHex":"#EEEEEA","interiorColor":"Parchment leather","transmission":"Automatic","drivetrain":"AWD","engine":"3.5L V6","fuelType":"Gasoline","mpgCity":18,"mpgHighway":24,"features":["Leather seats","Heated and ventilated front seats","Navigation","Power moonroof","Power liftgate","Backup camera"],"photos":[],"dateInStock":"2026-11-01","status":"available"},{"stockNumber":"EA1015","vin":"SAMPLE00000001015","year":2015,"make":"Chevrolet","model":"Tahoe","trim":"LT 4WD","bodyType":"SUV","price":18495,"mileage":151600,"exteriorColor":"Black","exteriorColorHex":"#121317","interiorColor":"Jet Black leather","transmission":"Automatic","drivetrain":"4WD","engine":"5.3L V8","fuelType":"Gasoline","mpgCity":16,"mpgHighway":22,"features":["Third-row seating","Leather seats","Heated front seats","Remote start","Tow package","Rear park assist"],"photos":[],"dateInStock":"2026-10-15","status":"available"},{"stockNumber":"EA1016","vin":"SAMPLE00000001016","year":2017,"make":"Chevrolet","model":"Silverado 1500","trim":"LT Crew Cab 4WD","bodyType":"Truck","price":21995,"mileage":126320,"exteriorColor":"Silver Ice Metallic","exteriorColorHex":"#B9BEC4","interiorColor":"Jet Black cloth","transmission":"Automatic","drivetrain":"4WD","engine":"5.3L V8","fuelType":"Gasoline","mpgCity":16,"mpgHighway":22,"features":["Tow package","Backup camera","Apple CarPlay","Remote start","Spray-in bed liner","Dual-zone climate control"],"photos":[],"dateInStock":"2026-10-31","status":"available"},{"stockNumber":"EA1017","vin":"SAMPLE00000001017","year":2019,"make":"Ram","model":"1500 Classic","trim":"Big Horn Crew Cab 4x4","bodyType":"Truck","price":24495,"mileage":97940,"exteriorColor":"Patriot Blue Pearl","exteriorColorHex":"#1C2E5E","interiorColor":"Diesel Gray and Black cloth","transmission":"Automatic","drivetrain":"4WD","engine":"5.7L HEMI V8","fuelType":"Gasoline","mpgCity":15,"mpgHighway":21,"features":["Uconnect touchscreen","Apple CarPlay","Android Auto","Remote start","Tow package","Heated front seats"],"photos":[],"dateInStock":"2026-11-03","status":"available"},{"stockNumber":"EA1018","vin":"SAMPLE00000001018","year":2016,"make":"Honda","model":"Odyssey","trim":"EX","bodyType":"Minivan","price":11995,"mileage":139560,"exteriorColor":"Obsidian Blue Pearl","exteriorColorHex":"#1E2A4A","interiorColor":"Gray cloth","transmission":"Automatic","drivetrain":"FWD","engine":"3.5L V6","fuelType":"Gasoline","mpgCity":19,"mpgHighway":28,"features":["Power sliding doors","Third-row seating","Backup camera","LaneWatch camera","Rear climate control"],"photos":[],"dateInStock":"2026-10-27","status":"available"},{"stockNumber":"EA1019","vin":"SAMPLE00000001019","year":2015,"make":"Toyota","model":"Sienna","trim":"XLE","bodyType":"Minivan","price":13995,"mileage":142900,"exteriorColor":"Predawn Gray Mica","exteriorColorHex":"#5D6168","interiorColor":"Gray leather","transmission":"Automatic","drivetrain":"FWD","engine":"3.5L V6","fuelType":"Gasoline","mpgCity":18,"mpgHighway":25,"features":["Power sliding doors","Leather seats","Power moonroof","Heated front seats","Backup camera","Third-row seating"],"photos":[],"dateInStock":"2026-10-19","status":"pending"},{"stockNumber":"EA1020","vin":"SAMPLE00000001020","year":2019,"make":"Toyota","model":"Corolla","trim":"LE","bodyType":"Sedan","price":14495,"mileage":74760,"exteriorColor":"Classic Silver Metallic","exteriorColorHex":"#C3C8CE","interiorColor":"Black fabric","transmission":"CVT","drivetrain":"FWD","engine":"1.8L I4","fuelType":"Gasoline","mpgCity":30,"mpgHighway":38,"features":["Backup camera","Adaptive cruise control","Lane departure alert","Automatic high beams","Bluetooth"],"photos":[],"dateInStock":"2026-11-02","status":"available"}]}</script>
+  <script type="application/json" id="inventory-data">{"note":"Fallback list, used only while the manager database isn't connected (js/config.js supabaseUrl/supabaseKey). Cars are added from the manager page.","vehicles":[]}</script>
   <script>
 /* ==========================================================================
    Dealership details. Edit these here; every page reads from this file.
@@ -1025,7 +1026,6 @@ button.thumb { cursor: pointer; }
 window.ELEVATE_CONFIG = {
   name: 'Elevate Auto Sales',
   legalName: 'Elevate Auto Sales LLC',
-  owner: 'Axel Munoz', // shown on the About page
   tagline: 'Drive Higher. Drive Better.', // as written on the banner
 
   phoneDisplay: '(773) 373-5448',
@@ -1071,6 +1071,15 @@ window.ELEVATE_CONFIG = {
     position: 'center',
   },
 
+  // The manager database (Supabase) that holds the cars and their photos.
+  // Paste the Project URL and the publishable key from Supabase:
+  // Project Settings > API Keys. The publishable key is meant to be public;
+  // the database rules in supabase/setup.sql decide who can change anything.
+  // Never put the secret (service role) key here. While these are empty, the
+  // site reads data/inventory.json instead. See README, "Manager page".
+  supabaseUrl: '',
+  supabaseKey: '',
+
   // Where form submissions (leads) go. FormSubmit (formsubmit.co, free, no
   // account) emails each one to the address at the end of this URL. The first
   // submission from the live site sends an "Activate Form" email to that inbox;
@@ -1087,21 +1096,26 @@ window.ELEVATE_CONFIG = {
 /* ==========================================================================
    Inventory source: the ONLY file that knows where vehicles come from.
 
-   Today it reads the sample file data/inventory.json (or a copy embedded in
-   the page by build.py). When the dealership picks an inventory system, change
-   load() to read that system's feed or API, and adjust normalize() so each
-   record maps to the fields below. Nothing else in the site needs to change.
+   With supabaseUrl and supabaseKey set in js/config.js, cars come from the
+   manager database (the manager page at /manager/ adds and edits them).
+   Without them, it reads data/inventory.json (or the copy build.py embeds).
+   To switch to another inventory system later, change load() and map its
+   records in normalize(). Nothing else in the site needs to change.
 
    Vehicle shape used by the site:
      id, stockNumber, vin, year, make, model, trim, bodyType, price, mileage,
      exteriorColor, exteriorColorHex, interiorColor, transmission, drivetrain,
      engine, fuelType, mpgCity, mpgHighway, features[], description, photos[],
-     dateInStock (YYYY-MM-DD), status ("available" | "pending" | "sold"), badge
+     dateInStock (YYYY-MM-DD), status ("available" | "pending" | "sold"), badge,
+     thumbs[] (small copies of photos[], same order; optional)
    ========================================================================== */
 (function () {
   'use strict';
 
   const SOURCE_URL = 'data/inventory.json';
+  const C = window.ELEVATE_CONFIG || {};
+  const DB_URL = String(C.supabaseUrl || '').trim().replace(/\/+$/, '');
+  const DB_KEY = String(C.supabaseKey || '').trim();
 
   // Used when a feed gives a color name but no swatch (most feeds don't).
   const COLOR_RULES = [
@@ -1136,6 +1150,7 @@ window.ELEVATE_CONFIG = {
     const photos = Array.isArray(r.photos)
       ? r.photos
       : String(r.photoUrls ?? r.PhotoURLs ?? '').split(/[|,]/).map((s) => s.trim()).filter(Boolean);
+    const thumbs = Array.isArray(r.thumbs) && r.thumbs.length === photos.length ? r.thumbs : photos;
     const features = Array.isArray(r.features)
       ? r.features
       : String(r.options ?? r.Options ?? '').split(/[|,]/).map((s) => s.trim()).filter(Boolean);
@@ -1162,6 +1177,7 @@ window.ELEVATE_CONFIG = {
       features,
       description: String(r.description ?? r.comments ?? r.Comments ?? ''),
       photos,
+      thumbs,
       dateInStock: String(r.dateInStock ?? r.DateInStock ?? ''),
       status: String(r.status ?? 'available').toLowerCase(),
       badge: String(r.badge ?? ''),
@@ -1172,7 +1188,57 @@ window.ELEVATE_CONFIG = {
     return v;
   }
 
+  // A row from the manager database (snake_case columns, photos stored as
+  // { url, thumb, path, thumbPath }) in the shape normalize() expects.
+  const isWebUrl = (u) => /^https:\/\//i.test(String(u || ''));
+  function fromDb(row) {
+    const shots = (Array.isArray(row.photos) ? row.photos : []).filter((p) => p && isWebUrl(p.url));
+    return {
+      stockNumber: row.stock_number,
+      vin: row.vin,
+      year: row.year,
+      make: row.make,
+      model: row.model,
+      trim: row.trim,
+      bodyType: row.body_type || 'Sedan',
+      price: row.price,
+      mileage: row.mileage,
+      exteriorColor: row.exterior_color,
+      interiorColor: row.interior_color,
+      transmission: row.transmission,
+      drivetrain: row.drivetrain,
+      engine: row.engine,
+      fuelType: row.fuel_type,
+      mpgCity: row.mpg_city,
+      mpgHighway: row.mpg_highway,
+      features: Array.isArray(row.features) ? row.features : [],
+      description: row.description,
+      photos: shots.map((p) => p.url),
+      thumbs: shots.map((p) => (isWebUrl(p.thumb) ? p.thumb : p.url)),
+      dateInStock: row.date_in_stock || String(row.created_at || '').slice(0, 10),
+      status: row.status,
+      badge: row.badge,
+    };
+  }
+
+  async function readDatabase() {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 12000);
+    try {
+      const res = await fetch(`${DB_URL}/rest/v1/vehicles?select=*&status=neq.sold&order=date_in_stock.desc,created_at.desc`, {
+        headers: { apikey: DB_KEY, Authorization: `Bearer ${DB_KEY}` },
+        cache: 'no-store',
+        signal: ctrl.signal,
+      });
+      if (!res.ok) throw new Error(`Inventory database responded with status ${res.status}.`);
+      return (await res.json()).map(fromDb);
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
   async function readRaw() {
+    if (DB_URL && DB_KEY) return readDatabase();
     const embedded = document.getElementById('inventory-data');
     if (embedded) return JSON.parse(embedded.textContent);
     const res = await fetch(SOURCE_URL, { cache: 'no-store' });
@@ -1186,7 +1252,7 @@ window.ELEVATE_CONFIG = {
     return list.map(normalize).filter((v) => v.id && v.status !== 'sold');
   }
 
-  window.InventorySource = { load, normalize };
+  window.InventorySource = { load, normalize, fromDb };
 })();
 
 </script>
@@ -1292,7 +1358,7 @@ window.ELEVATE_CONFIG = {
       footerShop: 'Shop',
       footerNav: 'Footer',
       directions: 'Get directions',
-      legal: 'Prices exclude tax, title, license, and documentary fees. Vehicles are subject to prior sale. This preview shows sample listings.',
+      legal: 'Prices exclude tax, title, license, and documentary fees. Vehicles are subject to prior sale.',
       quickContact: 'Quick contact',
       call: 'Call',
       text: 'Text',
@@ -1348,7 +1414,7 @@ window.ELEVATE_CONFIG = {
       salePending: 'Sale pending',
 
       invTitle: 'Inventory',
-      invSub: 'Sample listings for this preview. Real vehicles and photos will be added as they arrive.',
+      invSub: 'See what’s on the lot right now. Call or text with any questions.',
       filters: 'Filters',
       clearAll: 'Clear all',
       closeFilters: 'Close filters',
@@ -1474,8 +1540,6 @@ window.ELEVATE_CONFIG = {
       aboutLead: '{name} is a newly licensed independent dealership at {street} in {city}.',
       aboutP2: 'We’re a small team, so you’ll deal with the same people from your first call to the day you drive away. Every car on the lot is listed with its price, and we can help with financing.',
       aboutP3: 'Stop by {days}, or call us at {phone}.',
-      ownerPhoto: 'Owner photo',
-      ownerName: 'Owner name',
       callN: 'Call {phone}',
       openMaps: 'Open in Google Maps',
 
@@ -1497,6 +1561,8 @@ window.ELEVATE_CONFIG = {
       missingText: 'This vehicle may have sold. Browse the rest of the lot to find something similar.',
       errorTitle: 'Inventory unavailable',
       errorText: 'The vehicle list didn’t load. Call {phone} for current inventory.',
+      emptyLotTitle: 'New cars arriving soon',
+      emptyLotText: 'We’re stocking the lot now. Call or text {phone} to ask what’s coming in, or get pre-qualified so you’re ready when it arrives.',
 
       sending: 'Sending…',
       sentAvailT: 'Message sent',
@@ -1549,7 +1615,7 @@ window.ELEVATE_CONFIG = {
     values: {
       transmission: { Automatic: 'Automática', Manual: 'Manual', CVT: 'CVT' },
       fuel: { Gasoline: 'Gasolina', Hybrid: 'Híbrido', Electric: 'Eléctrico', Diesel: 'Diésel' },
-      badge: { 'Just arrived': 'Recién llegado' },
+      badge: { 'Just arrived': 'Recién llegado', 'Low miles': 'Pocas millas', 'Price drop': 'Precio rebajado' },
       feature: {
         'Adaptive cruise control': 'Control de crucero adaptativo',
         'Alloy wheels': 'Rines de aleación',
@@ -1614,7 +1680,7 @@ window.ELEVATE_CONFIG = {
       footerShop: 'Comprar',
       footerNav: 'Pie de página',
       directions: 'Cómo llegar',
-      legal: 'Los precios no incluyen impuestos, título, placas ni cargos de documentación. Los vehículos están sujetos a venta previa. Esta vista previa muestra vehículos de muestra.',
+      legal: 'Los precios no incluyen impuestos, título, placas ni cargos de documentación. Los vehículos están sujetos a venta previa.',
       quickContact: 'Contacto rápido',
       call: 'Llamar',
       text: 'Mensaje',
@@ -1670,7 +1736,7 @@ window.ELEVATE_CONFIG = {
       salePending: 'Venta pendiente',
 
       invTitle: 'Inventario',
-      invSub: 'Vehículos de muestra para esta vista previa. Los vehículos y fotos reales se agregarán a medida que lleguen.',
+      invSub: 'Vea lo que tenemos en el lote ahora. Llámenos o envíenos un mensaje si tiene preguntas.',
       filters: 'Filtros',
       clearAll: 'Borrar todo',
       closeFilters: 'Cerrar filtros',
@@ -1796,8 +1862,6 @@ window.ELEVATE_CONFIG = {
       aboutLead: '{name} es un concesionario independiente con licencia reciente, ubicado en {street}, {city}.',
       aboutP2: 'Somos un equipo pequeño, así que tratará con las mismas personas desde su primera llamada hasta el día en que se lleve su auto. Cada auto del lote se publica con su precio, y podemos ayudarle con el financiamiento.',
       aboutP3: 'Visítenos {days} o llámenos al {phone}.',
-      ownerPhoto: 'Foto del dueño',
-      ownerName: 'Nombre del dueño',
       callN: 'Llamar al {phone}',
       openMaps: 'Abrir en Google Maps',
 
@@ -1819,6 +1883,8 @@ window.ELEVATE_CONFIG = {
       missingText: 'Es posible que este vehículo ya se haya vendido. Vea el resto del lote para encontrar algo similar.',
       errorTitle: 'Inventario no disponible',
       errorText: 'La lista de vehículos no se cargó. Llame al {phone} para conocer el inventario actual.',
+      emptyLotTitle: 'Nuevos autos muy pronto',
+      emptyLotText: 'Estamos surtiendo el lote. Llame o envíe un mensaje al {phone} para preguntar qué está por llegar, o precalifique para estar listo cuando llegue.',
 
       sending: 'Enviando…',
       sentAvailT: 'Mensaje enviado',
@@ -2069,7 +2135,7 @@ window.ELEVATE_CONFIG = {
   const hasPhotos = (v) => Array.isArray(v.photos) && v.photos.length > 0;
 
   function cardMedia(v) {
-    if (hasPhotos(v)) return `<img src="${esc(v.photos[0])}" alt="" loading="lazy" decoding="async">`;
+    if (hasPhotos(v)) return `<img src="${esc((v.thumbs && v.thumbs[0]) || v.photos[0])}" alt="" loading="lazy" decoding="async">`;
     return Brand.photoPlaceholder({ label: esc(t('photoSoon')), decorative: true });
   }
 
@@ -2457,12 +2523,14 @@ window.ELEVATE_CONFIG = {
     const recent = avail.slice().sort((a, b) => b.dateInStock.localeCompare(a.dateInStock)).slice(0, 8);
     const count = (b) => avail.filter((v) => v.bodyType === b).length;
     const total = state.inventory.length;
+    const hasCars = avail.length > 0;
     return `
     ${heroMarkup()}
 
     <section class="intro" aria-labelledby="search-title">
       <div class="wrap intro-grid">
         <div class="intro-main">
+          ${hasCars ? `
           <h2 class="section-title" id="search-title">${esc(t('searchTitle'))}</h2>
           <form class="search" id="quick-search" role="search" aria-label="${esc(t('searchAria'))}">
             <label class="field"><span class="field-label">${esc(t('make'))}</span>
@@ -2475,7 +2543,7 @@ window.ELEVATE_CONFIG = {
           </form>
           <nav class="type-links" aria-label="${esc(t('browseByBody'))}">
             ${BODY_ORDER.map((b) => `<a href="#inventory" data-body="${b}">${esc(bodyPlural(b))}<span class="type-count">${count(b)}</span></a>`).join('')}
-          </nav>
+          </nav>` : lotNotice('search-title')}
         </div>
         <aside class="visit-card" aria-label="${esc(t('hoursLocation'))}">
           <p class="visit-card-status">${statusMarkup()}</p>
@@ -2489,7 +2557,7 @@ window.ELEVATE_CONFIG = {
       </div>
     </section>
 
-    <section class="section" aria-labelledby="lot-title">
+    ${hasCars ? `<section class="section" aria-labelledby="lot-title">
       <div class="wrap">
         <div class="section-head">
           <h2 class="section-title" id="lot-title">${esc(t('onLot'))}</h2>
@@ -2497,7 +2565,7 @@ window.ELEVATE_CONFIG = {
         </div>
         <div class="grid">${recent.map(card).join('')}</div>
       </div>
-    </section>
+    </section>` : ''}
 
     <section class="section section--alt">
       <div class="wrap two-up">
@@ -2577,6 +2645,10 @@ window.ELEVATE_CONFIG = {
   const SORTS = { newest: 'sortNewest', 'price-asc': 'sortPriceAsc', 'price-desc': 'sortPriceDesc', miles: 'sortMiles', year: 'sortYear' };
 
   function viewInventory() {
+    if (!state.inventory.length) {
+      return `${pageTop(t('invTitle'))}
+      <section class="section"><div class="wrap">${lotNotice()}</div></section>`;
+    }
     const f = state.filters;
     const years = uniq(state.inventory.map((v) => v.year)).sort((a, b) => a - b);
     return `
@@ -2656,6 +2728,7 @@ window.ELEVATE_CONFIG = {
   let searchTimer = 0;
   function afterInventory() {
     const form = $('#filter-form');
+    if (!form) return;
     form.addEventListener('submit', (e) => e.preventDefault());
     form.addEventListener('input', (e) => {
       if (e.target.name !== 'q') return;
@@ -2823,7 +2896,7 @@ window.ELEVATE_CONFIG = {
       const shots = v.photos.slice(0, 12);
       return `<div class="gallery-stage"><img data-gallery-main src="${esc(shots[0])}" alt="${esc(`${v.year} ${v.make} ${v.model}`)}">${badgeFor(v)}</div>
         <div class="gallery-thumbs" role="group" aria-label="${esc(t('choosePhoto'))}">
-          ${shots.map((src, i) => `<button class="thumb${i === 0 ? ' is-active' : ''}" type="button" data-thumb="${i}" aria-pressed="${i === 0}" aria-label="${esc(t('photoN', { n: i + 1 }))}"><img src="${esc(src)}" alt="" loading="lazy"></button>`).join('')}
+          ${shots.map((src, i) => `<button class="thumb${i === 0 ? ' is-active' : ''}" type="button" data-thumb="${i}" aria-pressed="${i === 0}" aria-label="${esc(t('photoN', { n: i + 1 }))}"><img src="${esc((v.thumbs && v.thumbs[i]) || src)}" alt="" loading="lazy"></button>`).join('')}
         </div>`;
     }
     return `<div class="gallery-stage">${Brand.photoPlaceholder({ label: esc(t('photosSoon')), size: 'lg' })}${badgeFor(v)}</div>
@@ -3041,10 +3114,6 @@ window.ELEVATE_CONFIG = {
           <p>${esc(t('aboutP2'))}</p>
           <p>${t('aboutP3', { days: esc(openDaysPhrase()), phone: `<a class="text-link" href="${telHref}">${esc(C.phoneDisplay)}</a>` })}</p>
         </div>
-        <figure class="owner">
-          ${Brand.photoPlaceholder({ label: esc(t('ownerPhoto')), size: 'portrait' })}
-          <figcaption><strong class="owner-name">${esc(C.owner || t('ownerName'))}</strong></figcaption>
-        </figure>
       </div>
     </section>
     <section class="section section--alt">
@@ -3123,17 +3192,30 @@ window.ELEVATE_CONFIG = {
 
   /* ---------- Fallback views ---------- */
   function viewMissing() {
+    if (state.loadError) {
+      return `${pageTop(t('errorTitle'))}
+      <section class="section"><div class="wrap">${lotNotice()}</div></section>`;
+    }
     return `${pageTop(t('missingTitle'), t('missingText'))}
     <section class="section"><div class="wrap"><a class="btn btn--primary" href="#inventory">${esc(t('browse'))}</a></div></section>`;
   }
 
-  function viewLoadError() {
-    const local = location.protocol === 'file:';
-    return `${pageTop(t('errorTitle'), t('errorText', { phone: C.phoneDisplay }))}
-    <section class="section"><div class="wrap">
+  // Shown where listings would be when the lot is empty or the list didn't
+  // load. The rest of the site (financing, contact, about) keeps working.
+  function lotNotice(headingId = '') {
+    const id = headingId ? ` id="${headingId}"` : '';
+    const phone = `<a class="text-link" href="${telHref}">${esc(C.phoneDisplay)}</a>`;
+    const failed = !!state.loadError;
+    const local = failed && location.protocol === 'file:';
+    return `<div class="lot-notice">
+      <h2 class="section-title"${id}>${esc(t(failed ? 'errorTitle' : 'emptyLotTitle'))}</h2>
+      <p>${failed ? t('errorText', { phone }) : t('emptyLotText', { phone })}</p>
       ${local ? '<p class="dev-note" lang="en">Opened from a file? Browsers block loading data/inventory.json that way. Run <code>python3 -m http.server</code> in the project folder and open http://localhost:8000, or use the single-file build in dist/.</p>' : ''}
-      <a class="btn btn--primary" href="${telHref}">${esc(t('callN', { phone: C.phoneDisplay }))}</a>
-    </div></section>`;
+      <div class="btn-row">
+        <a class="btn btn--primary" href="${telHref}">${icon('phone')}<span>${esc(t('callN', { phone: C.phoneDisplay }))}</span></a>
+        <a class="btn btn--outline" href="#financing">${esc(t('prequal'))}</a>
+      </div>
+    </div>`;
   }
 
   /* ---------- Forms (leads) ---------- */
@@ -3343,10 +3425,7 @@ window.ELEVATE_CONFIG = {
     openFilters(false);
     let key = name;
     let title = '';
-    if (state.loadError) {
-      view.innerHTML = viewLoadError();
-      key = 'error';
-    } else if (name.startsWith('v-')) {
+    if (name.startsWith('v-')) {
       const v = byId(name.slice(2));
       if (v) {
         view.innerHTML = viewVehicle(v);

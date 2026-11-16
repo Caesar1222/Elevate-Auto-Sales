@@ -887,14 +887,15 @@ button.thumb { cursor: pointer; }
   .fin-aside { position: sticky; top: calc(var(--sticky-h) + env(safe-area-inset-top, 0px) + 24px); }
 }
 
+/* ---------- Empty lot / list didn't load ---------- */
+.lot-notice { display: grid; gap: 14px; justify-items: start; max-width: 40rem; }
+.lot-notice p { color: var(--ink-2); font-size: 1.0625rem; }
+.lot-notice .btn-row { margin-top: 4px; }
+
 /* ---------- About ---------- */
 .about-grid { display: grid; gap: 36px; }
 .about-text { display: grid; gap: 16px; max-width: 38rem; color: var(--ink-2); font-size: 1.125rem; }
 .about-lead { color: var(--ink); font-size: 1.3rem; line-height: 1.45; font-weight: 500; }
-.owner { display: grid; gap: 10px; max-width: 320px; }
-.owner figcaption { display: grid; }
-.owner-name { font-size: 1.125rem; }
-@media (min-width: 860px) { .about-grid { grid-template-columns: minmax(0, 1fr) 300px; gap: 64px; align-items: start; } }
 
 /* ---------- Contact ---------- */
 .contact-grid { display: grid; gap: 40px; }
